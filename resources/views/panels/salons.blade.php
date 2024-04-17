@@ -6,7 +6,7 @@
 <div class="grid gap-6 grid-cols-1 lg:grid-cols-2">
     <div class="w-full flex">
         <div class="h-48 lg:h-auto w-32 xl:w-48 flex-none text-center rounded-lg overflow-hidden">
-            <a class="block w-full h-full hover:opacity-75" href="salons.html"><img src="assets/pictures/test_salon_1.jpg" class="w-full h-full object-cover" alt=""></a>
+            <a class="block w-full h-full hover:opacity-75" href="salons.html"><img src="/assets/pictures/test_salon_1.jpg" class="w-full h-full object-cover" alt=""></a>
         </div>
         <div class="px-4 flex flex-col justify-between leading-normal">
             <div class="mb-8">
@@ -23,7 +23,7 @@
     </div>
     <div class="w-full flex">
         <div class="h-48 lg:h-auto w-32 xl:w-48 flex-none text-center rounded-lg overflow-hidden">
-            <a class="block w-full h-full hover:opacity-75" href="salons.html"><img src="assets/pictures/test_salon_2.jpg" class="w-full h-full object-cover" alt=""></a>
+            <a class="block w-full h-full hover:opacity-75" href="salons.html"><img src="/assets/pictures/test_salon_2.jpg" class="w-full h-full object-cover" alt=""></a>
         </div>
         <div class="px-4 flex flex-col justify-between leading-normal">
             <div class="mb-8">

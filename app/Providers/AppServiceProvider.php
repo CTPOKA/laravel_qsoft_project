@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer(['panels.left_information_menu' , 'panels.footer_information_menu'], function (\Illuminate\View\View $view) {
+        View::composer(['panels.left_information_menu' , 'panels.footer_navigation'], function (\Illuminate\View\View $view) {
             $view->with('menu', [
                 [
                     'title' => 'О компании',
