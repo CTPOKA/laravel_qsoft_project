@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
     public function home()
     {
-        return view('pages.homepage');
+        $articles = Article::orderBy('published_at', 'desc')->take(3)->get();
+        return view('pages.homepage', ['articles' => $articles]);
     }
 
     public function about()
