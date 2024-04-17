@@ -1,6 +1,8 @@
 @extends('layouts.inner')
-@section('page-title', 'Страница')
-@section('title', 'Заголовок')
+
+@section('page-title', 'Для клиентов')
+@section('title', 'Для клиентов')
+
 @section('inner_content')
 <div class="space-y-4">
     <p>Ниже представлен пример отображения контента</p>
