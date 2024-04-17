@@ -13,14 +13,7 @@
             <nav>
                 <ul class="text-sm">
                     <li>
-                        <p class="text-xl text-black font-bold mb-4">Информация</p>
-                        <ul class="space-y-2">
-                            <li><a class="hover:text-orange" href="inner.html">О компании</a></li>
-                            <li><a class="text-orange cursor-default" href="inner.html">Контактная информация</a></li>
-                            <li><a class="hover:text-orange" href="inner.html">Условия продаж</a></li>
-                            <li><a class="hover:text-orange" href="inner.html">Финансовый отдел</a></li>
-                            <li><a class="hover:text-orange" href="inner.html">Для клиентов</a></li>
-                        </ul>
+                        @include('panels.left_information_menu')
                     </li>
                 </ul>
             </nav>
