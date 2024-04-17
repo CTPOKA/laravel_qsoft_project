@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\ArticlesController;
+use App\Http\Controllers\AdminPagesController;
+use App\Http\Controllers\ArticlesPagesController;
 use App\Http\Controllers\PageController;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,3 +26,9 @@ Route::get('/sale',     [PageController::class, 'sale'])->name('sale');
 Route::get('/finance',  [PageController::class, 'finance'])->name('finance');
 Route::get('/clients',  [PageController::class, 'clients'])->name('clients');
 
+Route::get('/articles',  [ArticlesPagesController::class, 'articles'])->name('articles');
+
+Route::prefix('admin')->name('admin.')->group(function (Router $router) {
+    $router->get('/', [AdminPagesController::class, 'admin'])->name('admin');
+    $router->resource('articles', ArticlesController::class)->except(['show']);
+});

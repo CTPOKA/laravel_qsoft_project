@@ -9,7 +9,11 @@ class PageController extends Controller
 {
     public function home()
     {
-        $articles = Article::orderBy('published_at', 'desc')->take(3)->get();
+        $articles = Article::whereNotNull('published_at')
+            ->orderBy('published_at', 'desc')
+            ->limit(3)
+            ->get();
+        
         return view('pages.homepage', ['articles' => $articles]);
     }
 
