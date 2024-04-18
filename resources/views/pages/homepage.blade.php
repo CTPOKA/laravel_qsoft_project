@@ -26,5 +26,5 @@
     </div>
 </section>
 @include('panels.week_models')
-@include('panels.news')
+@include('panels.news.news')
 @endsection
