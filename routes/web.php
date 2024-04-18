@@ -27,6 +27,7 @@ Route::get('/finance',  [PageController::class, 'finance'])->name('finance');
 Route::get('/clients',  [PageController::class, 'clients'])->name('clients');
 
 Route::get('/articles',  [ArticlesPagesController::class, 'articles'])->name('articles');
+Route::get('/articles/{article:slug}',  [ArticlesPagesController::class, 'article'])->name('article');
 
 Route::prefix('admin')->name('admin.')->group(function (Router $router) {
     $router->get('/', [AdminPagesController::class, 'admin'])->name('admin');
