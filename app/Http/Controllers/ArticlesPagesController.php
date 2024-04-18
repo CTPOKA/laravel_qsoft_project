@@ -15,4 +15,9 @@ class ArticlesPagesController extends Controller
         
         return view('pages.articles', ['articles' => $articles]);
     }
+
+    public function article(Article $article)
+    {        
+        return view('pages.article', ['article' => $article]);
+    }
 }

@@ -11,13 +11,4 @@ class AdminPagesController extends Controller
     {
         return view('pages.admin.admin');
     }
-    
-    public function articles()
-    {
-        $articles = Article::whereNotNull('published_at')
-            ->orderBy('published_at', 'desc')
-            ->get();
-        
-        return view('pages.admin.articles', ['articles' => $articles]);
-    }
 }
