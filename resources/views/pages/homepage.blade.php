@@ -25,6 +25,6 @@
         </div>
     </div>
 </section>
-@include('panels.week_models')
-@include('panels.articles.footer_articles')
+@include('panels.week_models', ['cars' => $cars])
+@include('panels.articles.footer_articles', ['articles' => $articles])
 @endsection
