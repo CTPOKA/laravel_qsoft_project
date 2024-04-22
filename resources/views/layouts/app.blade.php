@@ -16,6 +16,8 @@
     <script src="/assets/js/script.js"></script>
     <title>Рога и Сила - @section('page-title')Главная страница@show</title>
     <link href="/assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
+
+    @yield('scripts')
 </head>
 <body class="bg-white text-gray-600 font-sans leading-normal text-base tracking-normal flex min-h-screen flex-col">
 <div class="wrapper flex flex-1 flex-col">

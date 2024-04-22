@@ -6,11 +6,9 @@ use App\Contracts\Services\FlashMessageContract;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
-use App\Services\FlashMessage;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ArticlesController extends Controller
