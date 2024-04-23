@@ -6,18 +6,16 @@ use App\Contracts\Services\FlashMessageContract;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
-use App\Services\FlashMessage;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ArticlesController extends Controller
 {
     public function index(): Factory|View|Application
     {
-        $articles = Article::orderBy('updated_at', 'desc')->get();
+        $articles = Article::orderByDesc('updated_at')->get();
         
         return view('pages.admin.articles.list', ['articles' => $articles]);
     }
@@ -49,7 +47,7 @@ class ArticlesController extends Controller
         return view('pages.admin.articles.edit', ['article' => $article]);
     }
 
-    public function update(ArticleRequest $request, Article $article, FlashMessageContract $flashMessage)
+    public function update(ArticleRequest $request, Article $article, FlashMessageContract $flashMessage): RedirectResponse
     {
         $fields = $request->validated();
         if (is_null($article->published_at) && $request->get('published')) {
@@ -65,7 +63,7 @@ class ArticlesController extends Controller
         return back();
     }
 
-    public function destroy(Article $article, FlashMessageContract $flashMessage)
+    public function destroy(Article $article, FlashMessageContract $flashMessage): RedirectResponse
     {
         $article->delete();
 

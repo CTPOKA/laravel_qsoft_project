@@ -15,7 +15,6 @@ class Article extends Model
         'description',
         'body',
         'published_at',
-        'slug' //Временное решение
     ];
 
     protected static function boot()

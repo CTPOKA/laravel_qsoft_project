@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Contracts\Services\FlashMessageContract;
 use App\Services\FlashMessage;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,29 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer(['panels.left_information_menu' , 'panels.footer_navigation'], function (\Illuminate\View\View $view) {
-            $view->with('menu', [
-                [
-                    'title' => 'О компании',
-                    'route' => 'about',
-                ],
-                [
-                    'title' => 'Контактная информация',
-                    'route' => 'contacts',
-                ],
-                [
-                    'title' => 'Условия продаж',
-                    'route' => 'sale',
-                ],
-                [
-                    'title' => 'Финансовый отдел',
-                    'route' => 'finance',
-                ],
-                [
-                    'title' => 'Для клиентов',
-                    'route' => 'clients',
-                ],
-            ]);
-        });
+        Blade::if('admin', fn ()=> true);
+        Blade::if('authorized', fn ()=> true);
     }
 }
