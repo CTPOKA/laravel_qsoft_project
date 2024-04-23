@@ -1,40 +1,34 @@
-@extends('layouts.app')
-@section('page-title', $product->name)
-@section('title', $product->name)
-
-@section('scripts')
-<script>
-    $(function () {
-      $('[data-slick-carousel-detail]').each(function () {
-        let $carousel = $(this);
-
-        $carousel.find('[data-slick-carousel-detail-items]').slick({
-          dots: true,
-          arrows: false,
-          appendDots: $carousel.find('[data-slick-carousel-detail-pager]'),
-          rows: 0,
-          customPaging: function (slick, index) {
-            let imageSrc = slick.$slides[index].src;
-
-            return `
-<div class="relative">
-<svg xmlns="http://www.w3.org/2000/svg" class="active-arrow absolute -top-6 left-2/4 -ml-3 text-orange h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
-</svg>
-<span class="inline-block border rounded cursor-pointer"><img class="h-20 w-40 object-cover" src="${imageSrc}" alt="" title=""></span>
-</div>`;
-          }
-        })
-      })
-    })
-</script>
-<link href="/assets/css/inner_page_template_styles.css" rel="stylesheet">
-@endsection
-
-@section('content')
-@include('panels.header_navigation', ['menu' => []])
-
-<main class="flex-1 container mx-auto bg-white">
+<x-layouts.app page-title="{{$title = $product->name}}" title="{{ $title }}">
+    <x-slot:scripts>
+        <script>
+            $(function () {
+              $('[data-slick-carousel-detail]').each(function () {
+                let $carousel = $(this);
+        
+                $carousel.find('[data-slick-carousel-detail-items]').slick({
+                  dots: true,
+                  arrows: false,
+                  appendDots: $carousel.find('[data-slick-carousel-detail-pager]'),
+                  rows: 0,
+                  customPaging: function (slick, index) {
+                    let imageSrc = slick.$slides[index].src;
+        
+                    return `
+        <div class="relative">
+        <svg xmlns="http://www.w3.org/2000/svg" class="active-arrow absolute -top-6 left-2/4 -ml-3 text-orange h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+        </svg>
+        <span class="inline-block border rounded cursor-pointer"><img class="h-20 w-40 object-cover" src="${imageSrc}" alt="" title=""></span>
+        </div>`;
+                  }
+                })
+              })
+            })
+        </script>
+        <link href="/assets/css/inner_page_template_styles.css" rel="stylesheet">
+    </x-slot:scripts>
+    @include('panels.header_navigation', ['menu' => []])
+    <main class="flex-1 container mx-auto bg-white">
         <div class="p-4">
             <h1 class="text-black text-3xl font-bold mb-4">@yield('title')</h1>
             <div class="flex-1 grid grid-cols-1 lg:grid-cols-5 border-b w-full">
@@ -53,9 +47,9 @@
                         <div class="block px-4">
                             <p class="font-bold">Цена:</p>
                             @if ($product->old_price)
-                                <p class="text-base line-through text-gray-400">@include('panels.catalog.price', ['price' => $product->old_price])</p>
+                                <p class="text-base line-through text-gray-400"><x-price :price="$product->old_price" /></p>
                             @endif
-                            <p class="font-bold text-2xl text-orange">@include('panels.catalog.price', ['price' => $product->price])</p>
+                            <p class="font-bold text-2xl text-orange"><x-price :price="$product->price" /></p>
                             <div class="mt-4 block">
                                 <form>
                                     <button class="inline-block bg-orange hover:bg-opacity-70 focus:outline-none text-white font-bold py-2 px-4 rounded">
@@ -127,5 +121,5 @@
                 </div>
             </div>
         </div>
-</main>
-@endsection
+    </main>
+</x-layouts.app>
