@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\Repositories\CarsRepositoryContract;
+use App\Contracts\Services\CatalogDataCollectorContract;
+use App\DTO\CatalogFilterDTO;
 use App\Http\Controllers\Controller;
-use App\Models\Car;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -11,23 +13,29 @@ use Illuminate\Http\Request;
 
 class CatalogController extends Controller
 {
-    public function catalog(Request $request): Factory|View|Application
-    {
-        $cars = Car::query()
-            ->when(($model = $request->get('model')) !== null, fn ($query) => $query->where('name', 'like', "%$model%"))
-            ->when(($minPrice = $request->get('min_price')) !== null, fn ($query) => $query->where('price', '>=', $minPrice))
-            ->when(($maxPrice = $request->get('max_price')) !== null, fn ($query) => $query->where('price', '<=', $maxPrice))
-            ->when(($orderPrice = $request->get('order_price')) !== null, fn ($query) => $query->orderBy('price', $orderPrice === 'desc' ? 'desc' : 'asc'))
-            ->when(($orderModel = $request->get('order_model')) !== null, fn ($query) => $query->orderBy('name', $orderModel === 'desc' ? 'desc' : 'asc'))
-            ->get()
-        ;
+    public function catalog(
+        Request $request, 
+        CatalogDataCollectorContract $dataCollector,
+    ): Factory|View|Application {
+        $filterDTO = (new CatalogFilterDTO)
+            ->setModel($request->get('model'))
+            ->setMinPrice($request->get('min_price'))
+            ->setMaxPrice($request->get('max_price'))
+            ->setOrderPrice($request->get('order_price'))
+            ->setOrderModel($request->get('order_model'));
 
-        return view('pages.catalog', ['cars' => $cars]);
+        $catalogData = $dataCollector->collectCatalogData(
+            $filterDTO, 
+            8, 
+            $request->get('page') ?? 1,
+        );
+        
+        return view('pages.catalog', ['catalogData' => $catalogData]);
     }
 
-    public function products(Car $product): Factory|View|Application
+    public function products(int $id, CarsRepositoryContract $repository): Factory|View|Application
     {
-        $product->load(['carClass', 'carEngine', 'carBody']);
+        $product = $repository->getById($id, ['carClass', 'carEngine', 'carBody']);
 
         return view('pages.product', ['product' => $product]);
     }

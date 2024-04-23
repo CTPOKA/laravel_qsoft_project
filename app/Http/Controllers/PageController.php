@@ -2,24 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Article;
-use App\Models\Car;
+use App\Contracts\Repositories\ArticlesRepositoryContract;
+use App\Contracts\Repositories\CarsRepositoryContract;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class PageController extends Controller
 {
-    public function home()
+    public function home(CarsRepositoryContract $carsRepository, ArticlesRepositoryContract $articlesRepository)
     {
-        $cars = Car::where('is_new', true)
-        ->inRandomOrder()
-        ->limit(4)
-        ->get();
+        $cars = $carsRepository->findForMainPage(4);
 
-        $articles = Article::whereNotNull('published_at')
-            ->orderByDesc('published_at')
-            ->limit(3)
-            ->get();
+        $articles = $articlesRepository->findForMainPage(3);
         
         return view('pages.homepage', ['articles' => $articles], ['cars' => $cars]);
     }
@@ -44,9 +38,9 @@ class PageController extends Controller
         return view('pages.finance');
     }
 
-    public function clients()
+    public function clients(CarsRepositoryContract $repository)
     {
-        $cars = Car::with(['carEngine', 'carBody', 'carClass'])->get();
+        $cars = $repository->findAll();
 
         $averagePrice = $cars->avg->price;
 
