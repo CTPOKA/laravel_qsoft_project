@@ -8,7 +8,7 @@ use Illuminate\View\Component;
 
 class Price extends Component
 {
-    public function __construct(public readonly int $price)
+    public function __construct(public readonly ?int $price)
     {
     }
     
@@ -19,6 +19,6 @@ class Price extends Component
 
     public function formattedPrice(): string
     {
-        return number_format($this->price, 0, '.', ' ');
+        return $this->price ? number_format($this->price, 0, '.', ' ') . ' ₽' : '';
     }
 }

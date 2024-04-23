@@ -3,17 +3,31 @@
 namespace Database\Seeders;
 
 use App\Models\Car;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\CarBody;
+use App\Models\CarClass;
+use App\Models\CarEngine;
 use Illuminate\Database\Seeder;
 
 class CarSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $cars = [
+        $carEngines = CarEngine::get();
+        $carClasses = CarClass::get();
+        $carBodies = CarBody::get();
+
+        foreach ($this->cars() as $car) {
+            Car::factory()->create(array_merge($car, [
+                'car_engine_id' => $carEngines->random(),
+                'car_class_id' => $carClasses->random(),
+                'car_body_id' => $carBodies->random(),
+            ]));
+        }
+    }
+
+    private function cars(): array
+    {
+        return [
             [
                 'name' => 'K5',
                 'body' => 'Весеннее половодье точно отражает крестьянский коралловый риф, кроме этого, здесь есть ценнейшие коллекции мексиканских масок, бронзовые и каменные статуи из Индии и Цейлона, бронзовые барельефы и изваяния, созданные мастерами Экваториальной Африки пять-шесть веков назад. Независимое государство выбирает широколиственный лес, и не надо забывать, что время здесь отстает от московского на 2 часа. Центральная площадь последовательно применяет крестьянский попугай, также не надо забывать об островах Итуруп, Кунашир, Шикотан и грядах Хабомаи.',
@@ -91,9 +105,5 @@ class CarSeeder extends Seeder
                 'old_price' => null,
             ],
         ];
-
-        foreach ($cars as $car) {
-            Car::factory()->create($car);
-        }
     }
 }

@@ -27,6 +27,8 @@ class CatalogController extends Controller
 
     public function products(Car $product): Factory|View|Application
     {
+        $product->load(['carClass', 'carEngine', 'carBody']);
+
         return view('pages.product', ['product' => $product]);
     }
 }

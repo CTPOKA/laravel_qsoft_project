@@ -2,11 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\CarEngine;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Car>
- */
 class CarFactory extends Factory
 {
     public function definition(): array
@@ -21,6 +19,10 @@ class CarFactory extends Factory
             'year' => $year = rand(2012, 2022),
             'color' => $this->faker->colorName(),
             'is_new' => $year > 2020,
+
+            'car_engine_id' => CarEngine::factory(),
+            'car_class_id' => CarEngine::factory(),
+            'car_body_id' => CarEngine::factory(),
         ];
     }
 }

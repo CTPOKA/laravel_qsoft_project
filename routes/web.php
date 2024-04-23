@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ArticlesController;
+use App\Http\Controllers\Admin\CarsController;
 use App\Http\Controllers\AdminPagesController;
 use App\Http\Controllers\ArticlesPagesController;
 use App\Http\Controllers\CatalogController;
@@ -33,6 +34,7 @@ Route::get('/articles/{article:slug}',  [ArticlesPagesController::class, 'articl
 Route::prefix('admin')->name('admin.')->group(function (Router $router) {
     $router->get('/', [AdminPagesController::class, 'admin'])->name('admin');
     $router->resource('articles', ArticlesController::class)->except(['show']);
+    $router->resource('cars', CarsController::class)->except(['show']);
 });
 
 Route::get('/catalog',  [CatalogController::class, 'catalog'])->name('catalog');

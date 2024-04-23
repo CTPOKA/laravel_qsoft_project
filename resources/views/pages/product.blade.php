@@ -27,7 +27,7 @@
         </script>
         <link href="/assets/css/inner_page_template_styles.css" rel="stylesheet">
     </x-slot:scripts>
-    @include('panels.header_navigation', ['menu' => []])
+    <x-panels.header_navigation :menu="[]" />
     <main class="flex-1 container mx-auto bg-white">
         <div class="p-4">
             <h1 class="text-black text-3xl font-bold mb-4">@yield('title')</h1>
@@ -53,70 +53,51 @@
                             <div class="mt-4 block">
                                 <form>
                                     <button class="inline-block bg-orange hover:bg-opacity-70 focus:outline-none text-white font-bold py-2 px-4 rounded">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="inline-block h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                        </svg>
+                                        <x-icons.basket class="inline-block h-6 w-6 mr-2" />
                                         Купить
                                     </button>
                                 </form>
                             </div>
                         </div>
-                        <div class="block border-t clear-both w-full" data-accordion data-active>
-                            <div class="text-black text-2xl font-bold flex items-center justify-between hover:bg-gray-50 p-4 cursor-pointer" data-accordion-toggle>
-                                <span>Параметры</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="text-orange h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-accordion-not-active style="display: none">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="text-orange h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-accordion-active>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
+                        <x-panels.accordion :active=true>
+                            <x-slot:label>Параметры</x-slot:label>
+                            <x-panels.catalog.detail-products-props>
+                                <x-panels.catalog.detail-products-props-row>
+                                    <x-slot:label>Салон:</x-slot:label>
+                                    {{ $product->salon }}
+                                </x-panels.catalog.detail-products-props-row>
+                                <x-panels.catalog.detail-products-props-row>
+                                    <x-slot:label>Класс:</x-slot:label>
+                                    {{ $product->carClass->name }}
+                                </x-panels.catalog.detail-products-props-row>
+                                <x-panels.catalog.detail-products-props-row>
+                                    <x-slot:label>КПП:</x-slot:label>
+                                    {{ $product->kpp }}
+                                </x-panels.catalog.detail-products-props-row>
+                                <x-panels.catalog.detail-products-props-row>
+                                    <x-slot:label>Год выпуска:</x-slot:label>
+                                    {{ $product->year }}
+                                </x-panels.catalog.detail-products-props-row>
+                                <x-panels.catalog.detail-products-props-row>
+                                    <x-slot:label>Цвет:</x-slot:label>
+                                    {{ $product->color }}
+                                </x-panels.catalog.detail-products-props-row>
+                                <x-panels.catalog.detail-products-props-row>
+                                    <x-slot:label>Кузов:</x-slot:label>
+                                    {{ $product->carBody->name }}
+                                </x-panels.catalog.detail-products-props-row>
+                                <x-panels.catalog.detail-products-props-row>
+                                    <x-slot:label>Двигатель:</x-slot:label>
+                                    {{ $product->carEngine->name }}
+                                </x-panels.catalog.detail-products-props-row>
+                            </x-panels.catalog.detail-products-props>
+                        </x-panels.accordion>
+                        <x-panels.accordion>
+                            <x-slot:label>Описание</x-slot:label>
+                            <div class="space-y-4">
+                                <p>{{ $product->body }}</p>
                             </div>
-                            
-                            <div class="my-4 px-4" data-accordion-details>
-                                <table class="w-full">
-                                    <tr>
-                                        <td class="py-2 text-gray-600 w-1/2">Салон:</td>
-                                        <td class="py-2 text-black font-bold w-1/2">{{ $product->salon }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="py-2 text-gray-600 w-1/2">КПП:</td>
-                                        <td class="py-2 text-black font-bold w-1/2">{{ $product->kpp }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="py-2 text-gray-600 w-1/2">Год выпуска:</td>
-                                        <td class="py-2 text-black font-bold w-1/2">{{ $product->year }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="py-2 text-gray-600 w-1/2">Цвет:</td>
-                                        <td class="py-2 text-black font-bold w-1/2">{{ $product->color }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="py-2 text-gray-600 w-1/2">Теги:</td>
-                                        <td class="py-2 text-black font-bold w-1/2">
-                                            <div>
-                                                <span class="text-sm text-white italic rounded bg-orange px-2">Автомобиль</span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="block border-t clear-both w-full" data-accordion>
-                            <div class="text-black text-2xl font-bold flex items-center justify-between hover:bg-gray-50 p-4 cursor-pointer" data-accordion-toggle>
-                                <span>Описание</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="text-orange h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-accordion-not-active>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="text-orange h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-accordion-active style="display: none">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </div>
-                            <div class="my-4 px-4" data-accordion-details style="display: none">
-                                <div class="space-y-4">
-                                    <p>{{ $product->body }}</p>
-                                </div>
-                            </div>
-                        </div>
+                        </x-panels.accordion>
                     </div>
                 </div>
             </div>
