@@ -18,6 +18,14 @@ class ArticleRequest extends FormRequest
             'title' => 'required|min:5|max:100',
             'description' => 'required|max:255',
             'body' => 'required',
+            'published' => 'boolean',
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'published' => $this->has('published'),
+        ]);
     }
 }

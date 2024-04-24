@@ -2,23 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Article;
-use App\Models\Car;
+use App\Contracts\Repositories\ArticlesRepositoryContract;
+use App\Contracts\Repositories\CarsRepositoryContract;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PageController extends Controller
 {
-    public function home()
+    public function home(CarsRepositoryContract $carsRepository, ArticlesRepositoryContract $articlesRepository)
     {
-        $cars = Car::where('is_new', true)
-        ->inRandomOrder()
-        ->limit(4)
-        ->get();
+        $cars = $carsRepository->findForMainPage(4);
 
-        $articles = Article::whereNotNull('published_at')
-            ->orderByDesc('published_at')
-            ->limit(3)
-            ->get();
+        $articles = $articlesRepository->findForMainPage(3);
         
         return view('pages.homepage', ['articles' => $articles], ['cars' => $cars]);
     }
@@ -43,8 +38,49 @@ class PageController extends Controller
         return view('pages.finance');
     }
 
-    public function clients()
+    public function clients(CarsRepositoryContract $repository)
     {
-        return view('pages.clients');
+        $cars = $repository->findAll();
+
+        $averagePrice = $cars->avg->price;
+
+        $averageDiscountedPrice = $cars->whereNotNull('old_price')->avg('price');
+
+        $mostExpensiveModel = $cars->sortByDesc('price')->first();
+
+        $uniqueSalons = $cars->pluck('salon')->unique();
+
+        $sortedEngines = $cars->pluck('carEngine.name')->sort();
+
+        $sortedClassNames = $cars
+            ->pluck('carClass.name')
+            ->unique()
+            ->sort()
+            ->mapWithKeys(fn ($item) => [Str::slug($item) => $item]);
+        
+        $discountedModels = $cars
+            ->whereNotNull('old_price')
+            ->filter(fn ($car) => preg_match('/[56]/', $car->name . $car->kpp . $car->carEngine->name));
+        
+        $averagePricesByBodyType = $cars
+            ->each(function ($car) {
+                $car->old_price = $car->old_price ?: $car->price;
+            })
+            ->groupBy('carBody.name')
+            ->map(function ($car) {
+                return $car->avg('old_price');
+            })
+            ->sort();
+
+        return view('pages.clients', [
+            'averagePrice' => $averagePrice,
+            'averageDiscountedPrice' => $averageDiscountedPrice,
+            'mostExpensiveModel' => $mostExpensiveModel,
+            'uniqueSalons' => $uniqueSalons,
+            'sortedEngines' => $sortedEngines,
+            'sortedClassNames' => $sortedClassNames,
+            'discountedModels' => $discountedModels,
+            'averagePricesByBodyType' => $averagePricesByBodyType,
+        ]);
     }
 }

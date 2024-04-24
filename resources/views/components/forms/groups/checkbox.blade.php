@@ -8,7 +8,7 @@
             </label>
         </div>
         @if (! empty($error))
-            <span class="text-xs italic text-red-600">{{ $message }}</span>
+            <span class="text-xs italic text-red-600">{{ $error }}</span>
         @endif
     </div>
 </x-forms.row>
