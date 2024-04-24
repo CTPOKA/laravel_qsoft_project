@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Repositories\ArticlesRepositoryContract;
+use Illuminate\Http\Request;
 
 class ArticlesPagesController extends Controller
 {
@@ -10,10 +11,14 @@ class ArticlesPagesController extends Controller
     {
     }
 
-    public function articles()
+    public function articles(Request $request)
     {
-        $articles = $this->repository->findPublished();
-        
+        $articles = $this->repository->paginate(
+            ['*'],
+            $request->get('page') ?? 1,
+            4, 
+        );
+
         return view('pages.articles', ['articles' => $articles]);
     }
 

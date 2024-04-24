@@ -8,9 +8,7 @@
 
             <x-panels.catalog.catalog :cars="$catalogData->cars" />
 
-            <div class="text-center mt-4">
-                {{ $catalogData->cars->onEachSide(1)->links() }}
-            </div>
+            <x-panels.pagination :paginator="$catalogData->cars" />
         </div>
     </main>
 </x-layouts.app>

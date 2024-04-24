@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Contracts\Repositories\ArticlesRepositoryContract;
 use App\Models\Article;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class ArticlesRepository implements ArticlesRepositoryContract
@@ -32,6 +33,19 @@ class ArticlesRepository implements ArticlesRepositoryContract
             ->orderByDesc('published_at')
             ->limit($limit)
             ->get();
+    }
+
+    public function paginate(
+        array $fields = ['*'],
+        int $page = 1,
+        int $perpage = 8,
+        string $pageName = 'page',
+    ): LengthAwarePaginator
+    {
+        return $this->getModel()
+            ->whereNotNull('published_at')
+            ->orderBy('published_at', 'desc')
+            ->paginate($perpage, $fields, $pageName, $page);
     }
 
     public function getModel(): Article
