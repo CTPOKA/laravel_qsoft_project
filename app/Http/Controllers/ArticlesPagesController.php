@@ -22,9 +22,9 @@ class ArticlesPagesController extends Controller
         return view('pages.articles', ['articles' => $articles]);
     }
 
-    public function article(int $id)
+    public function article(string $slug)
     {
-        $article = $this->repository->getById($id);
+        $article = $this->repository->getBySlug($slug, ['tags']);
 
         return view('pages.article', ['article' => $article]);
     }

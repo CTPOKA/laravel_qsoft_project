@@ -90,6 +90,12 @@
                                     <x-slot:label>Двигатель:</x-slot:label>
                                     {{ $product->carEngine->name }}
                                 </x-panels.catalog.detail-products-props-row>
+                                @if ($product->tags->isNotEmpty())
+                                    <x-panels.catalog.detail-products-props-row>
+                                        <x-slot:label>Теги:</x-slot:label>
+                                        <x-panels.tags :tags="$product->tags" />
+                                    </x-panels.catalog.detail-products-props-row>
+                                @endif
                             </x-panels.catalog.detail-products-props>
                         </x-panels.accordion>
                         <x-panels.accordion>

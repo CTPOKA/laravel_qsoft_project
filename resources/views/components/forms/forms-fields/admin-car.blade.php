@@ -162,12 +162,13 @@
     />
 </x-forms.groups.checkbox>
 
-<div class="block">
-    <label for="fieldCarTags" class="text-gray-700 font-bold">Теги</label>
-    <input
-            id="fieldCarTags"
-            type="text"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            placeholder="Парадигма, Архетип, Киа Seed"
-    >
-</div>
+<x-forms.groups.group for="fieldCarTags" :error="$errors->first('tags')">
+    <x-slot:label>Теги</x-slot:label>
+    <x-forms.inputs.text
+        id="fieldCarTags"
+        name="tags"
+        placeholder="Парадигма, Архетип, Киа Seed"
+        :value="old('tags', $car->tags->pluck('name')->implode(', '))"
+        :error="$errors->first('tags')"
+    />
+</x-forms.groups.group>
