@@ -43,6 +43,10 @@ class CarsController extends Controller
 
         $car = $this->repository->create($fields);
 
+        $categories = $request->get('categories');
+
+        $car->categories()->sync($categories);
+
         $tagsSync->sync($car, $tagsRequest->get('tags', []));
 
         $flashMessage->success('Модель успешно создана');
@@ -72,6 +76,10 @@ class CarsController extends Controller
         $fields = $request->validated();
 
         $car = $this->repository->update($id, $fields);
+
+        $categories = $request->get('categories');
+
+        $car->categories()->sync($categories);
 
         $tagsSync->sync($car, $tagsRequest->get('tags', []));
 

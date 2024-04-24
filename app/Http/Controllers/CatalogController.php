@@ -6,6 +6,7 @@ use App\Contracts\Repositories\CarsRepositoryContract;
 use App\Contracts\Services\CatalogDataCollectorContract;
 use App\DTO\CatalogFilterDTO;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -14,22 +15,26 @@ use Illuminate\Http\Request;
 class CatalogController extends Controller
 {
     public function catalog(
-        Request $request, 
+        Request $request,
+        ?Category $category = null,
         CatalogDataCollectorContract $dataCollector,
     ): Factory|View|Application {
+
         $filterDTO = (new CatalogFilterDTO)
             ->setModel($request->get('model'))
             ->setMinPrice($request->get('min_price'))
             ->setMaxPrice($request->get('max_price'))
             ->setOrderPrice($request->get('order_price'))
-            ->setOrderModel($request->get('order_model'));
+            ->setOrderModel($request->get('order_model'))
+            ->setAllCategories($category ? $category->descendants->pluck('id')->push($category->id)->all() : []);
+        ;
 
         $catalogData = $dataCollector->collectCatalogData(
             $filterDTO, 
-            8, 
+            8,
             $request->get('page') ?? 1,
         );
-        
+
         return view('pages.catalog', ['catalogData' => $catalogData]);
     }
 

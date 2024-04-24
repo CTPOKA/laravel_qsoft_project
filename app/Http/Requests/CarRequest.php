@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\CarBody;
 use App\Models\CarClass;
 use App\Models\CarEngine;
+use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CarRequest extends FormRequest
@@ -30,6 +31,7 @@ class CarRequest extends FormRequest
             'car_engine_id' => ['required', 'exists:' . CarEngine::class . ',id'],
             'car_class_id' => ['required', 'exists:' . CarClass::class . ',id'],
             'car_body_id' => ['required', 'exists:' . CarBody::class . ',id'],
+            'categories' => ['required', 'exists:' . Category::class . ',id'],
         ];
     }
 

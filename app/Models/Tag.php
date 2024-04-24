@@ -12,6 +12,8 @@ class Tag extends Model
 
     protected $fillable = ['name'];
 
+    protected $touches = ['cars'];
+
     public function cars(): MorphToMany
     {
         return $this->morphedByMany(Car::class, 'taggable');

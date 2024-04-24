@@ -53,6 +53,7 @@ class CarsRepository implements CarsRepositoryContract
             ->when($dto->getMaxPrice() !== null, fn ($query) => $query->where('price', '<=', $dto->getMaxPrice()))
             ->when($dto->getOrderPrice() !== null, fn ($query) => $query->orderBy('price', $dto->getOrderPrice() === 'desc' ? 'desc' : 'asc'))
             ->when($dto->getOrderModel() !== null, fn ($query) => $query->orderBy('name', $dto->getOrderModel() === 'desc' ? 'desc' : 'asc'))
+            ->when($dto->getAllCategories() !== null, fn ($query) => $query->whereHas('categories', fn ($query) => $query->whereIn('id', $dto->getAllCategories())))
         ;
     }
 

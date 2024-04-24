@@ -5,6 +5,7 @@ namespace App\View\Components\Forms\FormsFields;
 use App\Contracts\Repositories\CarBodiesRepositoryContract;
 use App\Contracts\Repositories\CarClassesRepositoryContract;
 use App\Contracts\Repositories\CarEnginesRepositoryContract;
+use App\Contracts\Repositories\CategoriesRepositoryContract;
 use App\Models\Car;
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -17,6 +18,7 @@ class AdminCar extends Component
         public readonly CarEnginesRepositoryContract $enginesRepository,
         public readonly CarBodiesRepositoryContract $bodiesRepository,
         public readonly CarClassesRepositoryContract $classesRepository,
+        public readonly CategoriesRepositoryContract $categoryRepository,
     ) {
     }
 
@@ -25,11 +27,13 @@ class AdminCar extends Component
         $carEngines = $this->enginesRepository->findAll();
         $carBodies = $this->bodiesRepository->findAll();
         $carClasses = $this->classesRepository->findAll();
+        $categories = $this->categoryRepository->findAll();
 
         return view('components.forms.forms-fields.admin-car', [
             'carEngines' => $carEngines,
             'carBodies' => $carBodies,
             'carClasses' => $carClasses,
+            'categories' => $categories,
         ]);
     }
 }

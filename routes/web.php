@@ -37,6 +37,6 @@ Route::prefix('admin')->name('admin.')->group(function (Router $router) {
     $router->resource('cars', CarsController::class)->except(['show']);
 });
 
-Route::get('/catalog',  [CatalogController::class, 'catalog'])->name('catalog');
+Route::get('/catalog/{category?}',  [CatalogController::class, 'catalog'])->name('catalog');
 Route::get('/products/{product}',  [CatalogController::class, 'products'])->name('products');
 
