@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Contracts\Repositories\CarsRepositoryContract;
 use App\Contracts\Services\CatalogDataCollectorContract;
 use App\Contracts\Services\FlashMessageContract;
+use App\Contracts\Services\TagsSyncServiceContract;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CarRequest;
+use App\Http\Requests\TagsRequest;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -31,11 +33,17 @@ class CarsController extends Controller
         return view('pages.admin.cars.create');
     }
 
-    public function store(CarRequest $request, FlashMessageContract $flashMessage): RedirectResponse
-    {
+    public function store(
+        CarRequest $request,
+        TagsRequest $tagsRequest,
+        FlashMessageContract $flashMessage,
+        TagsSyncServiceContract $tagsSync,
+    ): RedirectResponse {
         $fields = $request->validated();
 
-        $this->repository->create($fields);
+        $car = $this->repository->create($fields);
+
+        $tagsSync->sync($car, $tagsRequest->get('tags', []));
 
         $flashMessage->success('Модель успешно создана');
 
@@ -54,11 +62,18 @@ class CarsController extends Controller
         return view('pages.admin.cars.edit', ['car' => $car]);
     }
 
-    public function update(CarRequest $request, int $id, FlashMessageContract $flashMessage): RedirectResponse
-    {
+    public function update(
+        CarRequest $request,
+        TagsRequest $tagsRequest,
+        int $id,
+        FlashMessageContract $flashMessage,
+        TagsSyncServiceContract $tagsSync,
+    ): RedirectResponse {
         $fields = $request->validated();
 
-        $this->repository->update($id, $fields);
+        $car = $this->repository->update($id, $fields);
+
+        $tagsSync->sync($car, $tagsRequest->get('tags', []));
 
         $flashMessage->success('Модель успешно изменена');
 

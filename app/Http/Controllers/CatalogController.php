@@ -35,7 +35,7 @@ class CatalogController extends Controller
 
     public function products(int $id, CarsRepositoryContract $repository): Factory|View|Application
     {
-        $product = $repository->getById($id, ['carClass', 'carEngine', 'carBody']);
+        $product = $repository->getById($id, ['carClass', 'carEngine', 'carBody', 'tags']);
 
         return view('pages.product', ['product' => $product]);
     }

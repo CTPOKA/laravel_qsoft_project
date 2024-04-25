@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Contracts\Services\FlashMessageContract;
+use App\Contracts\Services\TagsSyncServiceContract;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleRequest;
+use App\Http\Requests\TagsRequest;
 use App\Repositories\ArticlesRepository;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -29,12 +31,18 @@ class ArticlesController extends Controller
         return view('pages.admin.articles.create');
     }
 
-    public function store(ArticleRequest $request, FlashMessageContract $flashMessage): RedirectResponse
-    {
+    public function store(
+        ArticleRequest $request,
+        TagsRequest $tagsRequest,
+        FlashMessageContract $flashMessage,
+        TagsSyncServiceContract $tagsSync,
+    ): RedirectResponse {
         $fields = $request->validated();
         $fields['published_at'] = $request->get('published') ? now() : null;
         
-        $this->repository->create($fields);
+        $article = $this->repository->create($fields);
+
+        $tagsSync->sync($article, $tagsRequest->get('tags', []));
 
         $flashMessage->success('Новость успешно создана');
 
@@ -53,11 +61,18 @@ class ArticlesController extends Controller
         return view('pages.admin.articles.edit', ['article' => $article]);
     }
 
-    public function update(ArticleRequest $request, int $id, FlashMessageContract $flashMessage): RedirectResponse
-    {
+    public function update(
+        ArticleRequest $request,
+        int $id,
+        TagsRequest $tagsRequest,
+        FlashMessageContract $flashMessage,
+        TagsSyncServiceContract $tagsSync,
+    ): RedirectResponse {
         $fields = $request->validated();
 
-        $this->repository->update($id, $fields);
+        $article = $this->repository->update($id, $fields);
+
+        $tagsSync->sync($article, $tagsRequest->get('tags', []));
 
         $flashMessage->success('Новость успешно изменена');
 

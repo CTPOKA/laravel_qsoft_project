@@ -36,3 +36,13 @@
     :error="$errors->first('published')"
     />
 </x-forms.groups.checkbox>
+
+<x-forms.groups.group for="fieldArticleTags" :error="$errors->first('tags')">
+    <x-slot:label>Теги</x-slot:label>
+    <x-forms.inputs.text
+        id="fieldArticleTags"
+        name="tags"
+        :value="old('tags', $article->tags->pluck('name')->implode(', '))"
+        :error="$errors->first('tags')"
+    />
+</x-forms.groups.group>

@@ -8,8 +8,6 @@ use Illuminate\Support\Collection;
 
 interface ArticlesRepositoryContract
 {
-    public function getModel(): Article;
-
     public function findAll(): Collection;
 
     public function findPublished(): Collection;
@@ -23,7 +21,9 @@ interface ArticlesRepositoryContract
         string $pageName = 'page',
     ): LengthAwarePaginator;
 
-    public function getById(int $id): Article;
+    public function getById(int $id, array $relations = []): Article;
+
+    public function getBySlug(string $slug, array $relations = []): Article;
 
     public function create(array $fields): Article;
 

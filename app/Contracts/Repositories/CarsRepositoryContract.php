@@ -9,8 +9,6 @@ use Illuminate\Support\Collection;
 
 interface CarsRepositoryContract
 {
-    public function getModel(): Car;
-
     public function findAll(): Collection;
 
     public function findForMainPage(int $limit): Collection;

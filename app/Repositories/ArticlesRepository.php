@@ -48,14 +48,23 @@ class ArticlesRepository implements ArticlesRepositoryContract
             ->paginate($perpage, $fields, $pageName, $page);
     }
 
-    public function getModel(): Article
+    private function getModel(): Article
     {
         return $this->model;
     }
 
-    public function getById(int $id): Article
+    public function getById(int $id, array $relations = []): Article
     {
-        return $this->getModel()->findOrFail($id);
+        return $this->getModel()
+            ->when($relations, fn ($query) => $query->with($relations))
+            ->findOrFail($id);
+    }
+
+    public function getBySlug(string $slug, array $relations = []): Article
+    {
+        return $this->getModel()
+            ->when($relations, fn ($query) => $query->with($relations))
+            ->where('slug', $slug)->get()->first();
     }
 
     public function create(array $fields): Article
