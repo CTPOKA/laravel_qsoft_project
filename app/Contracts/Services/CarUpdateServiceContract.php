@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contracts\Repositories;
+namespace App\Contracts\Services;
 
 use App\Models\Car;
 

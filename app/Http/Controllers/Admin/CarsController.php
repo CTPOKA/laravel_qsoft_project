@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Contracts\Repositories\CarCreationServiceContract;
+use App\Contracts\Services\CarCreationServiceContract;
 use App\Contracts\Repositories\CarsRepositoryContract;
-use App\Contracts\Repositories\CarUpdateServiceContract;
+use App\Contracts\Services\CarUpdateServiceContract;
 use App\Contracts\Services\FlashMessageContract;
-use App\Contracts\Services\TagsSyncServiceContract;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CarRequest;
 use App\Http\Requests\TagsRequest;

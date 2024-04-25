@@ -7,7 +7,6 @@ use App\Contracts\Repositories\CategoriesRepositoryContract;
 use App\Contracts\Services\CatalogDataCollectorContract;
 use App\DTO\CatalogFilterDTO;
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -49,7 +48,7 @@ class CatalogController extends Controller
 
     public function products(int $id, CarsRepositoryContract $repository): Factory|View|Application
     {
-        $product = $repository->getById($id, ['carClass', 'carEngine', 'carBody', 'tags']);
+        $product = $repository->getById($id, ['carClass', 'carEngine', 'carBody', 'tags', 'image']);
 
         return view('pages.product', ['product' => $product]);
     }

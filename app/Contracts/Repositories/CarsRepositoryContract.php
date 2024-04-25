@@ -21,6 +21,7 @@ interface CarsRepositoryContract
         int $page = 1,
         int $perpage = 10,
         string $pageName = 'page',
+        array $relations = [],
     ): LengthAwarePaginator;
 
     public function getById(int $id, array $relations = []): Car;

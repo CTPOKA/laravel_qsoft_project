@@ -7,6 +7,7 @@ use App\Models\CarBody;
 use App\Models\CarClass;
 use App\Models\CarEngine;
 use App\Models\Category;
+use App\Models\Image;
 use Illuminate\Database\Seeder;
 
 class CarSeeder extends Seeder
@@ -24,6 +25,8 @@ class CarSeeder extends Seeder
                 'car_class_id' => $carClasses->random(),
                 'car_body_id' => $carBodies->random(),
             ]));
+
+            $carModel->images()->attach(Image::factory()->count(rand(0, 3))->create());
 
             $carModel->categories()->attach($categories->random(rand(1, 3)));
         }
