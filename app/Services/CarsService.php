@@ -2,10 +2,9 @@
 
 namespace App\Services;
 
-use App\Contracts\Repositories\CarCreationServiceContract;
+use App\Contracts\Services\CarCreationServiceContract;
 use App\Contracts\Repositories\CarsRepositoryContract;
-use App\Contracts\Repositories\CarUpdateServiceContract;
-use App\Contracts\Repositories\TagsRepositoryContract;
+use App\Contracts\Services\CarUpdateServiceContract;
 use App\Contracts\Services\TagsSyncServiceContract;
 use App\Models\Car;
 

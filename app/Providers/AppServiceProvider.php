@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Contracts\Repositories\CarCreationServiceContract;
-use App\Contracts\Repositories\CarUpdateServiceContract;
+use App\Contracts\Services\CarCreationServiceContract;
+use App\Contracts\Services\CarUpdateServiceContract;
 use App\Contracts\Services\CatalogDataCollectorContract;
 use App\Contracts\Services\FlashMessageContract;
 use App\Contracts\Services\TagsSyncServiceContract;
@@ -12,7 +12,6 @@ use App\Services\CatalogDataCollector;
 use App\Services\FlashMessage;
 use App\Services\TagsSyncService;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
