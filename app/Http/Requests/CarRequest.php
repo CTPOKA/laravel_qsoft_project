@@ -21,7 +21,7 @@ class CarRequest extends FormRequest
             'name' => 'required',
             'price' => 'required|integer',
             'old_price' => ['sometimes', 'nullable', 'integer', 'gt:price'],
-            'body' => '',
+            'body' => 'required',
             'salon' => '',
             'kpp' => '',
             'year' => '',

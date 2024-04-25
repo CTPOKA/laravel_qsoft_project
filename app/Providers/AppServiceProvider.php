@@ -2,9 +2,12 @@
 
 namespace App\Providers;
 
+use App\Contracts\Repositories\CarCreationServiceContract;
+use App\Contracts\Repositories\CarUpdateServiceContract;
 use App\Contracts\Services\CatalogDataCollectorContract;
 use App\Contracts\Services\FlashMessageContract;
 use App\Contracts\Services\TagsSyncServiceContract;
+use App\Services\CarsService;
 use App\Services\CatalogDataCollector;
 use App\Services\FlashMessage;
 use App\Services\TagsSyncService;
@@ -24,6 +27,9 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(CatalogDataCollectorContract::class, CatalogDataCollector::class);
         $this->app->singleton(TagsSyncServiceContract::class, TagsSyncService::class);
+
+        $this->app->singleton(CarCreationServiceContract::class, CarsService::class);
+        $this->app->singleton(CarUpdateServiceContract::class, CarsService::class);
     }
 
     /**

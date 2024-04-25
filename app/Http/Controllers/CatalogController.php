@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Repositories\CarsRepositoryContract;
+use App\Contracts\Repositories\CategoriesRepositoryContract;
 use App\Contracts\Services\CatalogDataCollectorContract;
 use App\DTO\CatalogFilterDTO;
 use App\Http\Controllers\Controller;
@@ -16,9 +17,17 @@ class CatalogController extends Controller
 {
     public function catalog(
         Request $request,
-        ?Category $category = null,
+        CategoriesRepositoryContract $categoriesRepository,
         CatalogDataCollectorContract $dataCollector,
+        ?string $slug = null,
     ): Factory|View|Application {
+        $allCateriries = [];
+        $category = null;
+
+        if ($slug) {
+            $category = $categoriesRepository->findBySlug($slug, ['descendants']);
+            $allCateriries = $category->descendants->pluck('id')->push($category->id)->all();
+        }
 
         $filterDTO = (new CatalogFilterDTO)
             ->setModel($request->get('model'))
@@ -26,7 +35,7 @@ class CatalogController extends Controller
             ->setMaxPrice($request->get('max_price'))
             ->setOrderPrice($request->get('order_price'))
             ->setOrderModel($request->get('order_model'))
-            ->setAllCategories($category ? $category->descendants->pluck('id')->push($category->id)->all() : []);
+            ->setAllCategories($slug ? $allCateriries : []);
         ;
 
         $catalogData = $dataCollector->collectCatalogData(

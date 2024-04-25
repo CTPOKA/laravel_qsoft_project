@@ -17,6 +17,26 @@ class CategoriesRepository implements CategoriesRepositoryContract
         return $this->getModel()->get();
     }
 
+    public function getTree(?int $maxDepth = null): Collection
+    {
+        return $this->getModel()
+            ->withDepth()
+            ->when($maxDepth, fn ($query) => $query->having('depth', '<=', $maxDepth))
+            ->orderBy('sort')
+            ->get()
+            ->toTree()
+        ;
+    }
+
+    public function findBySlug(string $slug, array $relations = []): Category
+    {
+        return $this->getModel()
+            ->where('slug', $slug)
+            ->when($relations, fn ($query) => $query->with($relations))
+            ->firstOrFail()
+        ;
+    }
+
     private function getModel(): Category
     {
         return $this->model;

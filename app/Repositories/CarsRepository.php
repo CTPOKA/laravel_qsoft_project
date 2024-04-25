@@ -53,7 +53,7 @@ class CarsRepository implements CarsRepositoryContract
             ->when($dto->getMaxPrice() !== null, fn ($query) => $query->where('price', '<=', $dto->getMaxPrice()))
             ->when($dto->getOrderPrice() !== null, fn ($query) => $query->orderBy('price', $dto->getOrderPrice() === 'desc' ? 'desc' : 'asc'))
             ->when($dto->getOrderModel() !== null, fn ($query) => $query->orderBy('name', $dto->getOrderModel() === 'desc' ? 'desc' : 'asc'))
-            ->when($dto->getAllCategories() !== null, fn ($query) => $query->whereHas('categories', fn ($query) => $query->whereIn('id', $dto->getAllCategories())))
+            ->when(! empty($dto->getAllCategories()), fn ($query) => $query->whereHas('categories', fn ($query) => $query->whereIn('id', $dto->getAllCategories())))
         ;
     }
 
@@ -69,17 +69,13 @@ class CarsRepository implements CarsRepositoryContract
             ->findOrFail($id);
     }
 
-    public function create(array $fields, array $categories = []): Car
+    public function create(array $fields): Car
     {
-        $car = Car::create($fields);
-
-        return $car;
+        return $this->getModel()->create($fields);
     }
 
-    public function update(int $id, array $fields, array $categories = []): Car
+    public function update(Car $car, array $fields): Car
     {
-        $car = $this->getById($id);
-
         $car->update($fields);
 
         return $car;
@@ -88,5 +84,12 @@ class CarsRepository implements CarsRepositoryContract
     public function delete(int $id): void
     {
         $this->getModel()->where('id', $id)->delete();
+    }
+
+    public function syncCategories(Car $car, array $categories = []): Car
+    {
+        $car->categories()->sync($categories);
+
+        return $car;
     }
 }
