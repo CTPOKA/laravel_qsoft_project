@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Contracts\Repositories\CarsRepositoryContract;
+use App\Contracts\Services\CatalogDataCollectorContract;
 use App\Contracts\Services\FlashMessageContract;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CarRequest;
-use App\Models\Car;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -13,9 +14,14 @@ use Illuminate\Http\RedirectResponse;
 
 class CarsController extends Controller
 {
+    public function __construct(
+        public readonly CarsRepositoryContract $repository,
+    ) {
+    }
+
     public function index(): Factory|View|Application
     {
-        $cars = Car::orderByDesc('updated_at')->get();
+        $cars = $this->repository->findAll()->sortByDesc('updated_at');
         
         return view('pages.admin.cars.list', ['cars' => $cars]);
     }
@@ -29,37 +35,39 @@ class CarsController extends Controller
     {
         $fields = $request->validated();
 
-        Car::create($fields);
+        $this->repository->create($fields);
 
         $flashMessage->success('Модель успешно создана');
 
         return redirect()->route('admin.cars.index');
     }
 
-    public function show(Car $car)
+    public function show(int $id)
     {
         //
     }
 
-    public function edit(Car $car): Factory|View|Application
+    public function edit(int $id): Factory|View|Application
     {
+        $car = $this->repository->getById($id);
+
         return view('pages.admin.cars.edit', ['car' => $car]);
     }
 
-    public function update(CarRequest $request, Car $car, FlashMessageContract $flashMessage): RedirectResponse
+    public function update(CarRequest $request, int $id, FlashMessageContract $flashMessage): RedirectResponse
     {
         $fields = $request->validated();
 
-        $car->update($fields);
+        $this->repository->update($id, $fields);
 
         $flashMessage->success('Модель успешно изменена');
 
         return back();
     }
 
-    public function destroy(Car $car, FlashMessageContract $flashMessage): RedirectResponse
+    public function destroy(int $id, FlashMessageContract $flashMessage): RedirectResponse
     {
-        $car->delete();
+        $this->repository->delete($id);
 
         $flashMessage->success('Модель удалена');
 
