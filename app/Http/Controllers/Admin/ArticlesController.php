@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleRequest;
 use App\Http\Requests\TagsRequest;
 use App\Repositories\ArticlesRepository;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -42,9 +43,13 @@ class ArticlesController extends Controller
         $fields = $request->validated();
         $tags = $tagsRequest->get('tags', []);
 
-        $createServise->create($fields, $tags);
+        try {
+            $createServise->create($fields, $tags);
 
-        $flashMessage->success('Новость успешно создана');
+            $flashMessage->success('Новость успешно создана');
+        } catch (Exception $exception) {
+            $flashMessage->error($exception->getMessage());
+        }
 
         return redirect()->route('admin.articles.index');
     }
@@ -71,9 +76,13 @@ class ArticlesController extends Controller
         $fields = $request->validated();
         $tags = $tagsRequest->get('tags', []);
 
-        $updateServise->update($id, $fields, $tags);
+        try {
+            $updateServise->update($id, $fields, $tags);
 
-        $flashMessage->success('Новость успешно изменена');
+            $flashMessage->success('Новость успешно изменена');
+        } catch (Exception $exception) {
+            $flashMessage->error($exception->getMessage());
+        }
 
         return back();
     }
@@ -83,9 +92,13 @@ class ArticlesController extends Controller
         ArticleRemoveServiceContract $removeService,
         FlashMessageContract $flashMessage,
     ): RedirectResponse {
-        $removeService->delete($id);
+        try {
+            $removeService->delete($id);
 
-        $flashMessage->success('Новость удалена');
+            $flashMessage->success('Новость удалена');
+        } catch (Exception $exception) {
+            $flashMessage->error($exception->getMessage());
+        }
 
         return back();
     }
