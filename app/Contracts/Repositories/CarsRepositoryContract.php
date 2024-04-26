@@ -7,7 +7,7 @@ use App\Models\Car;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
-interface CarsRepositoryContract
+interface CarsRepositoryContract extends FlashCacheRepositoryContract
 {
     public function findAll(): Collection;
 

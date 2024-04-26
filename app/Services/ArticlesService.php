@@ -34,6 +34,8 @@ class ArticlesService implements ArticleCreationServiceContract, ArticleUpdateSe
             $this->tagsSync->sync($Article, $tags);
         }
 
+        $this->articlesRepository->flashCache();
+        
         return $Article;
     }
 
@@ -65,6 +67,8 @@ class ArticlesService implements ArticleCreationServiceContract, ArticleUpdateSe
             $this->imagesService->deleteImage($oldImageId);
         }
 
+        $this->articlesRepository->flashCache();
+
         return $article;
     }
 
@@ -77,5 +81,7 @@ class ArticlesService implements ArticleCreationServiceContract, ArticleUpdateSe
         }
 
         $this->articlesRepository->delete($id);
+
+        $this->articlesRepository->flashCache();
     }
 }

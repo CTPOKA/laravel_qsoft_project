@@ -6,7 +6,7 @@ use App\Models\Article;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
-interface ArticlesRepositoryContract
+interface ArticlesRepositoryContract extends FlashCacheRepositoryContract
 {
     public function findAll(): Collection;
 
@@ -17,8 +17,9 @@ interface ArticlesRepositoryContract
     public function paginate(
         array $fields = ['*'],
         int $page = 1,
-        int $perpage = 8,
+        int $perPage = 8,
         string $pageName = 'page',
+        array $relations = [],
     ): LengthAwarePaginator;
 
     public function getById(int $id, array $relations = []): Article;

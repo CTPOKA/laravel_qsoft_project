@@ -5,7 +5,7 @@ namespace App\Contracts\Repositories;
 use App\Models\Category;
 use Illuminate\Support\Collection;
 
-interface CategoriesRepositoryContract
+interface CategoriesRepositoryContract extends FlashCacheRepositoryContract
 {
     public function findAll(): Collection;
 

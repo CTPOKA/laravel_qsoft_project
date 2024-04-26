@@ -8,18 +8,31 @@ use App\Models\Tag;
 
 class TagsRepository implements TagsRepositoryContract
 {
+    use FlashCache;
+
+    protected function cacheTags(): array
+    {
+        return ['tags'];
+    }
+
     public function __construct(public readonly Tag $model)
     {
     }
 
     public function findOrCreateByName(string $name): Tag
     {
-        return $this->getModel()->firstOrCreate(['name' => $name]);
+        $tag = $this->getModel()->firstOrCreate(['name' => $name]);
+
+        $this->flashCache();
+
+        return $tag;
     }
 
     public function syncTags(HasTagsContract $model, array $tags)
     {
         $model->tags()->sync($tags);
+
+        $this->flashCache();
     }
 
     public function deleteUnusedTags()
@@ -28,6 +41,8 @@ class TagsRepository implements TagsRepositoryContract
             ->whereDoesntHave('cars')
             ->whereDoesntHave('articles')
             ->delete();
+        
+        $this->flashCache();
     }
 
     private function getModel(): Tag

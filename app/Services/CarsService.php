@@ -36,6 +36,8 @@ class CarsService implements CarCreationServiceContract, CarUpdateServiceContrac
             $this->tagsSync->sync($car, $tags);
         }
 
+        $this->carsRepository->flashCache();
+
         return $car;
     }
 
@@ -64,6 +66,8 @@ class CarsService implements CarCreationServiceContract, CarUpdateServiceContrac
             $this->imagesService->deleteImage($oldImageId);
         }
 
+        $this->carsRepository->flashCache();
+
         return $car;
     }
 
@@ -76,5 +80,7 @@ class CarsService implements CarCreationServiceContract, CarUpdateServiceContrac
         }
 
         $this->carsRepository->delete($id);
+
+        $this->carsRepository->flashCache();
     }
 }
