@@ -4,7 +4,7 @@ namespace App\Contracts\Repositories;
 
 use App\Models\Image;
 
-interface ImagesRepositoryContract
+interface ImagesRepositoryContract extends FlashCacheRepositoryContract
 {
     public function create(string $diskPath): Image;
 

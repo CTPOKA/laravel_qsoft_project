@@ -16,7 +16,8 @@ class ArticlesPagesController extends Controller
         $articles = $this->repository->paginate(
             ['*'],
             $request->get('page') ?? 1,
-            4, 
+            4,
+            relations: ['tags', 'image']
         );
 
         return view('pages.articles', ['articles' => $articles]);
@@ -24,7 +25,7 @@ class ArticlesPagesController extends Controller
 
     public function article(string $slug)
     {
-        $article = $this->repository->getBySlug($slug, ['tags']);
+        $article = $this->repository->getBySlug($slug, ['tags', 'image']);
 
         return view('pages.article', ['article' => $article]);
     }

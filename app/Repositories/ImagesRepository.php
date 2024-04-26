@@ -7,13 +7,24 @@ use App\Models\Image;
 
 class ImagesRepository implements ImagesRepositoryContract
 {
+    use FlashCache;
+
+    protected function cacheTags(): array
+    {
+        return ['images'];
+    }
+
     public function __construct(private readonly Image $model)
     {
     }
 
     public function create(string $diskPath): Image
     {
-        return $this->getModel()->create(['path' => $diskPath]);
+        $image = $this->getModel()->create(['path' => $diskPath]);
+
+        $this->flashCache();
+        
+        return $image;
     }
 
     public function getById(int $id): ?Image
@@ -23,7 +34,9 @@ class ImagesRepository implements ImagesRepositoryContract
 
     public function delete(int $id)
     {
-        return $this->getModel()->where('id', $id)->delete();
+        $this->getModel()->where('id', $id)->delete();
+
+        $this->flashCache();
     } 
 
     private function getModel(): Image

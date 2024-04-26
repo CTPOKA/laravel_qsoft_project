@@ -5,7 +5,7 @@ namespace App\Contracts\Repositories;
 use App\Contracts\HasTagsContract;
 use App\Models\Tag;
 
-interface TagsRepositoryContract
+interface TagsRepositoryContract extends FlashCacheRepositoryContract
 {
     public function findOrCreateByName(string $name): Tag;
 
