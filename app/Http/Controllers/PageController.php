@@ -3,19 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Repositories\ArticlesRepositoryContract;
+use App\Contracts\Repositories\BannersRepositoryContract;
 use App\Contracts\Repositories\CarsRepositoryContract;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class PageController extends Controller
 {
-    public function home(CarsRepositoryContract $carsRepository, ArticlesRepositoryContract $articlesRepository)
-    {
+    public function home(
+        CarsRepositoryContract $carsRepository,
+        ArticlesRepositoryContract $articlesRepository,
+        BannersRepositoryContract $bannersRepository,
+    ) {
         $cars = $carsRepository->findForMainPage(4);
 
         $articles = $articlesRepository->findForMainPage(3);
+
+        $banners = $bannersRepository->findForMainPage(3);
         
-        return view('pages.homepage', ['articles' => $articles], ['cars' => $cars]);
+        return view('pages.homepage', ['articles' => $articles, 'cars' => $cars, 'banners' => $banners]);
     }
 
     public function about()

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\CarEngine;
+use App\Models\Image;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CarFactory extends Factory
@@ -14,6 +15,7 @@ class CarFactory extends Factory
             'body' => $this->faker->text(500),
             'price' => $price = rand(500000, 5000000),
             'old_price' => $this->faker->optional()->numberBetween($price * 1.1, $price * 1.4),
+            'image_id' => Image::factory(),
             'salon' => implode(' ', $this->faker->words(4)),
             'kpp' => implode(' ', $this->faker->words(3)),
             'year' => $year = rand(2012, 2022),

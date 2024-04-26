@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Contracts\Services\CarCreationServiceContract;
 use App\Contracts\Repositories\CarsRepositoryContract;
-use App\Contracts\Services\CatalogDataCollectorContract;
+use App\Contracts\Services\CarRemoveServiceContract;
+use App\Contracts\Services\CarUpdateServiceContract;
 use App\Contracts\Services\FlashMessageContract;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CarRequest;
+use App\Http\Requests\TagsRequest;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -31,11 +34,17 @@ class CarsController extends Controller
         return view('pages.admin.cars.create');
     }
 
-    public function store(CarRequest $request, FlashMessageContract $flashMessage): RedirectResponse
-    {
+    public function store(
+        CarRequest $request,
+        TagsRequest $tagsRequest,
+        FlashMessageContract $flashMessage,
+        CarCreationServiceContract $createServise,
+    ): RedirectResponse {
         $fields = $request->validated();
+        $categories = $request->get('categories');
+        $tags = $tagsRequest->get('tags', []);
 
-        $this->repository->create($fields);
+        $createServise->create($fields, $categories, $tags);
 
         $flashMessage->success('Модель успешно создана');
 
@@ -49,25 +58,35 @@ class CarsController extends Controller
 
     public function edit(int $id): Factory|View|Application
     {
-        $car = $this->repository->getById($id);
+        $car = $this->repository->getById($id, ['categories', 'image', 'images', 'tags']);
 
         return view('pages.admin.cars.edit', ['car' => $car]);
     }
 
-    public function update(CarRequest $request, int $id, FlashMessageContract $flashMessage): RedirectResponse
-    {
+    public function update(
+        CarRequest $request,
+        TagsRequest $tagsRequest,
+        int $id,
+        FlashMessageContract $flashMessage,
+        CarUpdateServiceContract $updateServise,
+    ): RedirectResponse {
         $fields = $request->validated();
+        $categories = $request->get('categories');
+        $tags = $tagsRequest->get('tags', []);
 
-        $this->repository->update($id, $fields);
+        $updateServise->update($id, $fields, $categories, $tags);
 
         $flashMessage->success('Модель успешно изменена');
 
         return back();
     }
 
-    public function destroy(int $id, FlashMessageContract $flashMessage): RedirectResponse
-    {
-        $this->repository->delete($id);
+    public function destroy(
+        int $id,
+        CarRemoveServiceContract $removeService,
+        FlashMessageContract $flashMessage,
+    ): RedirectResponse {
+        $removeService->delete($id);
 
         $flashMessage->success('Модель удалена');
 

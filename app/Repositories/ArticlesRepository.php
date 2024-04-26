@@ -6,9 +6,17 @@ use App\Contracts\Repositories\ArticlesRepositoryContract;
 use App\Models\Article;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class ArticlesRepository implements ArticlesRepositoryContract
 {
+    use FlashCache;
+
+    protected function cacheTags(): array
+    {
+        return ['articles'];
+    }
+
     public function __construct(private readonly Article $model)
     {
     }
@@ -28,34 +36,68 @@ class ArticlesRepository implements ArticlesRepositoryContract
 
     public function findForMainPage(int $limit): Collection
     {
-        return $this->getModel()
-            ->whereNotNull('published_at')
-            ->orderByDesc('published_at')
-            ->limit($limit)
-            ->get();
+        return Cache::tags(['articles', 'images', 'tags'])->remember(
+            "mainPageArticles|{$limit}",
+            3600,
+            fn() =>
+            $this->getModel()
+                ->whereNotNull('published_at')
+                ->with(['image', 'tags'])
+                ->orderByDesc('published_at')
+                ->limit($limit)
+                ->get()
+        );
     }
 
     public function paginate(
         array $fields = ['*'],
         int $page = 1,
-        int $perpage = 8,
+        int $perPage = 8,
         string $pageName = 'page',
+        array $relations = [],
     ): LengthAwarePaginator
     {
-        return $this->getModel()
-            ->whereNotNull('published_at')
-            ->orderBy('published_at', 'desc')
-            ->paginate($perpage, $fields, $pageName, $page);
+        return Cache::tags(['articles', 'images', 'tags'])->remember(
+            sprintf('paginateForCatalog|%s|',
+                serialize([
+                    'fields' => $fields,
+                    'perPage' => $perPage,
+                    'page' => $page,
+                    'pageName' => $pageName,
+                    'relations' => $relations,
+                ])
+            ),
+            3600,
+            fn () => $this->getModel()
+                ->whereNotNull('published_at')
+                ->when($relations, fn ($query) => $query->with($relations))
+                ->orderBy('published_at', 'desc')
+                ->paginate($perPage, $fields, $pageName, $page)
+        );
     }
 
-    public function getModel(): Article
+    private function getModel(): Article
     {
         return $this->model;
     }
 
-    public function getById(int $id): Article
+    public function getById(int $id, array $relations = []): Article
     {
-        return $this->getModel()->findOrFail($id);
+        return $this->getModel()
+            ->when($relations, fn ($query) => $query->with($relations))
+            ->findOrFail($id);
+    }
+
+    public function getBySlug(string $slug, array $relations = []): Article
+    {
+        return Cache::tags(['articles', 'images', 'tags'])->remember(
+            sprintf('articlesBySlug|%s|%s', $slug, implode('|', $relations)),
+            3600,
+            fn() =>
+            $this->getModel()
+                ->when($relations, fn ($query) => $query->with($relations))
+                ->where('slug', $slug)->get()->first()
+        );
     }
 
     public function create(array $fields): Article
@@ -63,18 +105,8 @@ class ArticlesRepository implements ArticlesRepositoryContract
         return Article::create($fields);
     }
 
-    public function update(int $id, array $fields): Article
+    public function update(Article $article, array $fields): Article
     {
-        $article = $this->getById($id);
-
-        $published = $fields['published'];
-
-        if (is_null($article->published_at) && $published) {
-            $fields['published_at'] = now();
-        } elseif (! is_null($article->published_at) && ! $published) {
-            $fields['published_at'] = null;
-        }
-
         $article->update($fields);
         
         return $article;

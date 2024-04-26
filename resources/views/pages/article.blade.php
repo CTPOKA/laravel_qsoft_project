@@ -3,10 +3,8 @@
         <x-panels.header_navigation :menu="[['title' => 'Новости', 'url' => route('articles')]]" />
     </x-slot:header-navigation>
     <div class="space-y-4">
-        <img src="/assets/pictures/car_new_stinger.png" alt="" title="">
-        <div>
-            <span class="text-sm text-white italic rounded bg-orange px-2">Статья</span>
-        </div>
+        <img src="{{ $article->imageUrl }}" alt="" title="">
+        <x-panels.tags :tags="$article->tags" />
         {!! $article->body !!}
     </div>
     <div class="mt-4">

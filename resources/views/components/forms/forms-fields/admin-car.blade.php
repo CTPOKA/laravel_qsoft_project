@@ -18,7 +18,7 @@
         id="fieldCarMainImage"
         name="image"
         :error="$errors->first('image')"
-        :value="$car->image"
+        :value="$car->imageUrl"
     />
 </x-forms.groups.group>
 
@@ -42,6 +42,22 @@
         :value="old('old_price', $car->old_price)"
         :error="$errors->first('old_price')"
     />
+</x-forms.groups.group>
+
+<x-forms.groups.group for="fieldCarCategories" :error="$errors->first('categories')">
+    <x-slot:label>Категории</x-slot:label>
+    <x-forms.inputs.select
+        id="fieldCarCategories"
+        name="categories[]"
+        :error="$errors->first('categories')"
+        multiple
+    >
+    @foreach ($categories as $category)
+        <option @selected(in_array($category->id, old('categories', $car->categories->pluck('id')->all()))) value="{{ $category->id }}">
+            {{ $category->name }}
+        </option>
+    @endforeach
+    </x-forms.inputs.select>
 </x-forms.groups.group>
 
 <x-forms.groups.group for="fieldCarDescription" :error="$errors->first('body')">
@@ -106,7 +122,7 @@
         :error="$errors->first('car_class_id')"
     >
     @foreach ($carClasses as $class)
-        <option value="{{ $class->id }}" @selected($car->car_class_id === $class->id)>
+        <option @selected($car->car_class_id == old('car_class_id', $class->id)) value="{{ $class->id }}">
             {{ $class->name }}
         </option>
     @endforeach
@@ -121,7 +137,7 @@
         :error="$errors->first('car_body_id')"
     >
     @foreach ($carBodies as $body)
-        <option value="{{ $body->id }}" @selected($car->car_body_id === $body->id)>
+        <option @selected($car->car_body_id == old('car_body_id', $body->id)) value="{{ $body->id }}">
             {{ $body->name }}
         </option>
     @endforeach
@@ -136,7 +152,7 @@
         :error="$errors->first('car_engine_id')"
     >
     @foreach ($carEngines as $engine)
-        <option value="{{ $engine->id }}" @selected($car->car_engine_id === $engine->id)>
+        <option @selected($car->car_engine_id == old('car_engine_id', $engine->id)) value="{{ $engine->id }}">
             {{ $engine->name }}
         </option>
     @endforeach
@@ -144,12 +160,12 @@
 </x-forms.groups.group>
 
 <x-forms.groups.group for="fieldCarAdditionalImages" :error="$errors->first('images')">
-    <x-slot:label>Основное изображение модели</x-slot:label>
+    <x-slot:label>Дополнительные изображения модели</x-slot:label>
     <x-forms.inputs.multiple-file
         id="fieldCarAdditionalImages"
         name="images"
         :error="$errors->first('images')"
-        :values="['/assets/images/no_image.png', '/assets/images/no_image.png', '/assets/images/no_image.png']"
+        :values="$car->images->pluck('url')->all()"
     />
 </x-forms.groups.group>
 
@@ -162,12 +178,13 @@
     />
 </x-forms.groups.checkbox>
 
-<div class="block">
-    <label for="fieldCarTags" class="text-gray-700 font-bold">Теги</label>
-    <input
-            id="fieldCarTags"
-            type="text"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            placeholder="Парадигма, Архетип, Киа Seed"
-    >
-</div>
+<x-forms.groups.group for="fieldCarTags" :error="$errors->first('tags')">
+    <x-slot:label>Теги</x-slot:label>
+    <x-forms.inputs.text
+        id="fieldCarTags"
+        name="tags"
+        placeholder="Парадигма, Архетип, Киа Seed"
+        :value="old('tags', $car->tags->pluck('name')->implode(', '))"
+        :error="$errors->first('tags')"
+    />
+</x-forms.groups.group>

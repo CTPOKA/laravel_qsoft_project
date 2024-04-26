@@ -1,5 +1,5 @@
 <x-layouts.admin page-title="Форма редактирования новости" title="Форма редактирования новости">
-    <x-forms.form action="{{ route('admin.cars.update', $car) }}" method="post">
+    <x-forms.form action="{{ route('admin.cars.update', $car) }}" method="post" enctype="multipart/form-data">
         @method('PATCH')
         <x-forms.forms-fields.admin-car :car="$car" />
         <x-forms.row>
