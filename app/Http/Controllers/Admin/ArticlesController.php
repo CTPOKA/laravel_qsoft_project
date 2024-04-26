@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Contracts\Services\ArticleCreationServiceContract;
+use App\Contracts\Services\ArticleRemoveServiceContract;
+use App\Contracts\Services\ArticleUpdateServiceContract;
 use App\Contracts\Services\FlashMessageContract;
-use App\Contracts\Services\TagsSyncServiceContract;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleRequest;
 use App\Http\Requests\TagsRequest;
@@ -35,14 +37,12 @@ class ArticlesController extends Controller
         ArticleRequest $request,
         TagsRequest $tagsRequest,
         FlashMessageContract $flashMessage,
-        TagsSyncServiceContract $tagsSync,
+        ArticleCreationServiceContract $createServise,
     ): RedirectResponse {
         $fields = $request->validated();
-        $fields['published_at'] = $request->get('published') ? now() : null;
-        
-        $article = $this->repository->create($fields);
+        $tags = $tagsRequest->get('tags', []);
 
-        $tagsSync->sync($article, $tagsRequest->get('tags', []));
+        $createServise->create($fields, $tags);
 
         $flashMessage->success('Новость успешно создана');
 
@@ -56,7 +56,7 @@ class ArticlesController extends Controller
 
     public function edit(int $id): Factory|View|Application
     {
-        $article = $this->repository->getById($id);
+        $article = $this->repository->getById($id, ['image', 'tags']);
 
         return view('pages.admin.articles.edit', ['article' => $article]);
     }
@@ -66,22 +66,24 @@ class ArticlesController extends Controller
         int $id,
         TagsRequest $tagsRequest,
         FlashMessageContract $flashMessage,
-        TagsSyncServiceContract $tagsSync,
+        ArticleUpdateServiceContract $updateServise,
     ): RedirectResponse {
         $fields = $request->validated();
+        $tags = $tagsRequest->get('tags', []);
 
-        $article = $this->repository->update($id, $fields);
-
-        $tagsSync->sync($article, $tagsRequest->get('tags', []));
+        $updateServise->update($id, $fields, $tags);
 
         $flashMessage->success('Новость успешно изменена');
 
         return back();
     }
 
-    public function destroy(int $id, FlashMessageContract $flashMessage): RedirectResponse
-    {
-        $this->repository->delete($id);
+    public function destroy(
+        int $id,
+        ArticleRemoveServiceContract $removeService,
+        FlashMessageContract $flashMessage,
+    ): RedirectResponse {
+        $removeService->delete($id);
 
         $flashMessage->success('Новость удалена');
 

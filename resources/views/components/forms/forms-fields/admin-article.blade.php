@@ -9,15 +9,17 @@
         :error="$errors->first('title')"
     />
 </x-forms.groups.group>
+
 <x-forms.groups.group for="fieldDescription" :error="$errors->first('description')">
     <x-slot:label>Краткое описание новости</x-slot:label>
     <x-forms.inputs.text
         id="fieldDescription"
         name="description"
-        :value="old('description', $article->title)"
+        :value="old('description', $article->description)"
         :error="$errors->first('description')"
     />
 </x-forms.groups.group>
+
 <x-forms.groups.group for="fieldBody" :error="$errors->first('body')">
     <x-slot:label>Детальное описание</x-slot:label>
     <x-forms.inputs.textarea 
@@ -28,6 +30,17 @@
         :error="$errors->first('body')"
     />
 </x-forms.groups.group>
+
+<x-forms.groups.group for="fieldArticleImage" :error="$errors->first('image')">
+    <x-slot:label>Изображение новости</x-slot:label>
+    <x-forms.inputs.one-file
+        id="fieldArticleImage"
+        name="image"
+        :error="$errors->first('image')"
+        :value="$article->imageUrl"
+    />
+</x-forms.groups.group>
+
 <x-forms.groups.checkbox :error="$errors->first('published')">
     <x-slot:label>Опубликован</x-slot:label>
     <x-forms.inputs.checkbox

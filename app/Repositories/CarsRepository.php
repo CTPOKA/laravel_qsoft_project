@@ -24,6 +24,7 @@ class CarsRepository implements CarsRepositoryContract
     {
         return $this->getModel()
             ->where('is_new', true)
+            ->with(['image'])
             ->inRandomOrder()
             ->limit($limit)
             ->get();
@@ -31,7 +32,7 @@ class CarsRepository implements CarsRepositoryContract
 
     public function findForCatalog(CatalogFilterDTO $filterDTO, array $fields = ['*']): Collection
     {
-            return $this->catalogQuery($filterDTO)->get($fields);
+        return $this->catalogQuery($filterDTO)->get($fields);
     }
 
     public function paginateForCatalog(
@@ -40,9 +41,12 @@ class CarsRepository implements CarsRepositoryContract
         int $perpage = 8,
         int $page = 1,
         string $pageName = 'page',
+        array $relations = [],
     ): LengthAwarePaginator
     {
-        return $this->catalogQuery($filterDTO)->paginate($perpage, $fields, $pageName, $page);
+        return $this->catalogQuery($filterDTO)
+            ->when($relations, fn ($query) => $query->with($relations))
+            ->paginate($perpage, $fields, $pageName, $page);
     }
 
     private function catalogQuery(CatalogFilterDTO $dto): Builder

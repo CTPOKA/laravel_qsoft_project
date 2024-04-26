@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Contracts\Services\CarCreationServiceContract;
 use App\Contracts\Repositories\CarsRepositoryContract;
+use App\Contracts\Services\CarRemoveServiceContract;
 use App\Contracts\Services\CarUpdateServiceContract;
 use App\Contracts\Services\FlashMessageContract;
 use App\Http\Controllers\Controller;
@@ -57,7 +58,7 @@ class CarsController extends Controller
 
     public function edit(int $id): Factory|View|Application
     {
-        $car = $this->repository->getById($id);
+        $car = $this->repository->getById($id, ['categories', 'image', 'images', 'tags']);
 
         return view('pages.admin.cars.edit', ['car' => $car]);
     }
@@ -80,9 +81,12 @@ class CarsController extends Controller
         return back();
     }
 
-    public function destroy(int $id, FlashMessageContract $flashMessage): RedirectResponse
-    {
-        $this->repository->delete($id);
+    public function destroy(
+        int $id,
+        CarRemoveServiceContract $removeService,
+        FlashMessageContract $flashMessage,
+    ): RedirectResponse {
+        $removeService->delete($id);
 
         $flashMessage->success('Модель удалена');
 

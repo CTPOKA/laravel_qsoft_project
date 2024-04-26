@@ -2,19 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Image;
 use DateInterval;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Article>
- */
 class ArticleFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
         return [
@@ -22,6 +15,7 @@ class ArticleFactory extends Factory
             'title' => $this->faker->text(50),
             'description' => $this->faker->text(255),
             'body' => $this->faker->text(1000),
+            'image_id' => Image::factory(),
             'published_at' => $this->faker->optional()->dateTimeThisMonth()?->add(
                 new DateInterval('P' . $this->faker->numberBetween(0, now()->daysInMonth - 1) . 'D')
             ),

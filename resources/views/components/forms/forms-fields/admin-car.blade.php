@@ -18,7 +18,7 @@
         id="fieldCarMainImage"
         name="image"
         :error="$errors->first('image')"
-        :value="$car->image"
+        :value="$car->imageUrl"
     />
 </x-forms.groups.group>
 
@@ -160,12 +160,12 @@
 </x-forms.groups.group>
 
 <x-forms.groups.group for="fieldCarAdditionalImages" :error="$errors->first('images')">
-    <x-slot:label>Основное изображение модели</x-slot:label>
+    <x-slot:label>Дополнительные изображения модели</x-slot:label>
     <x-forms.inputs.multiple-file
         id="fieldCarAdditionalImages"
         name="images"
         :error="$errors->first('images')"
-        :values="['/assets/images/no_image.png', '/assets/images/no_image.png', '/assets/images/no_image.png']"
+        :values="$car->images->pluck('url')->all()"
     />
 </x-forms.groups.group>
 

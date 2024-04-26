@@ -27,7 +27,7 @@ interface ArticlesRepositoryContract
 
     public function create(array $fields): Article;
 
-    public function update(int $id, array $fields): Article;
+    public function update(Article $article, array $fields): Article;
 
     public function delete(int $id): void;
 }
