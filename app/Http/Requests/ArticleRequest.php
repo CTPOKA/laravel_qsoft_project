@@ -19,6 +19,8 @@ class ArticleRequest extends FormRequest
             'description' => 'required|max:255',
             'body' => 'required',
             'published' => 'boolean',
+
+            'image' => ['sometimes', 'nullable', 'image'],
         ];
     }
 

@@ -16,6 +16,16 @@ class ImagesRepository implements ImagesRepositoryContract
         return $this->getModel()->create(['path' => $diskPath]);
     }
 
+    public function getById(int $id): ?Image
+    {
+        return $this->getModel()->find($id);
+    }
+
+    public function delete(int $id)
+    {
+        return $this->getModel()->where('id', $id)->delete();
+    } 
+
     private function getModel(): Image
     {
         return $this->model;

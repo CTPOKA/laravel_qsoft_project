@@ -32,6 +32,8 @@ class CarRequest extends FormRequest
             'car_class_id' => ['required', 'exists:' . CarClass::class . ',id'],
             'car_body_id' => ['required', 'exists:' . CarBody::class . ',id'],
             'categories' => ['required', 'exists:' . Category::class . ',id'],
+
+            'image' => ['sometimes', 'nullable', 'image'],
         ];
     }
 

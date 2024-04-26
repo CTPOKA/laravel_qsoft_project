@@ -4,9 +4,6 @@ namespace Database\Factories;
 
 use App\Contracts\Services\ImagesServiceContract;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\Image;
-use GuzzleHttp\Client;
-use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 
 class ImageFactory extends Factory

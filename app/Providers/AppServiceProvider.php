@@ -2,13 +2,18 @@
 
 namespace App\Providers;
 
+use App\Contracts\Services\ArticleCreationServiceContract;
+use App\Contracts\Services\ArticleRemoveServiceContract;
+use App\Contracts\Services\ArticleUpdateServiceContract;
 use App\Contracts\Services\CarCreationServiceContract;
+use App\Contracts\Services\CarRemoveServiceContract;
 use App\Contracts\Services\CarUpdateServiceContract;
 use App\Contracts\Services\CatalogDataCollectorContract;
 use App\Contracts\Services\FlashMessageContract;
 use App\Contracts\Services\ImagesServiceContract;
 use App\Contracts\Services\TagsSyncServiceContract;
 use App\Models\Image;
+use App\Services\ArticlesService;
 use App\Services\CarsService;
 use App\Services\CatalogDataCollector;
 use App\Services\FlashMessage;
@@ -43,6 +48,12 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(CarCreationServiceContract::class, CarsService::class);
         $this->app->singleton(CarUpdateServiceContract::class, CarsService::class);
+        $this->app->singleton(CarRemoveServiceContract::class, CarsService::class);
+
+        $this->app->singleton(ArticleCreationServiceContract::class, ArticlesService::class);
+        $this->app->singleton(ArticleUpdateServiceContract::class, ArticlesService::class);
+        $this->app->singleton(ArticleRemoveServiceContract::class, ArticlesService::class);
+
         $this->app->singleton(ImagesServiceContract::class, function () {
             /** @var Illuminate\Filesystem\FilesystemAdapter $disk */
             $disk = Storage::disk('public');

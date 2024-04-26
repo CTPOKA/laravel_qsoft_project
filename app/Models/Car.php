@@ -28,6 +28,8 @@ class Car extends Model implements HasTagsContract
         'car_engine_id',
         'car_class_id',
         'car_body_id',
+
+        'image_id',
     ];
 
     public function carClass(): BelongsTo

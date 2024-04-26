@@ -72,18 +72,8 @@ class ArticlesRepository implements ArticlesRepositoryContract
         return Article::create($fields);
     }
 
-    public function update(int $id, array $fields): Article
+    public function update(Article $article, array $fields): Article
     {
-        $article = $this->getById($id);
-
-        $published = $fields['published'];
-
-        if (is_null($article->published_at) && $published) {
-            $fields['published_at'] = now();
-        } elseif (! is_null($article->published_at) && ! $published) {
-            $fields['published_at'] = null;
-        }
-
         $article->update($fields);
         
         return $article;
