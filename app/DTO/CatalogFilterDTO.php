@@ -78,4 +78,16 @@ class CatalogFilterDTO
 
         return $this;
     }
+
+    public function getAllCategories(): ?array
+    {
+        return $this->allCategories;
+    }
+
+    public function setAllCategories(array $categories): CatalogFilterDTO
+    {
+        $this->allCategories = $categories;
+
+        return $this;
+    }
 }

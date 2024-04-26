@@ -25,9 +25,11 @@ interface CarsRepositoryContract
 
     public function getById(int $id, array $relations = []): Car;
 
-    public function create(array $fields, array $categories = []): Car;
+    public function create(array $fields): Car;
 
-    public function update(int $id, array $fields, array $categories = []): Car;
+    public function update(Car $car, array $fields): Car;
 
     public function delete(int $id): void;
+
+    public function syncCategories(Car $car, array $categories = []): Car;
 }

@@ -50,7 +50,7 @@
                 @isset($menu)
                     {{ $menu }}
                 @else
-                    <x-panels.catalog_navigation_menu />
+                    <x-panels.category-menu />
                 @endisset
                 
             </div>

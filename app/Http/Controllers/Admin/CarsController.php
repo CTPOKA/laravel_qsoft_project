@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Contracts\Services\CarCreationServiceContract;
 use App\Contracts\Repositories\CarsRepositoryContract;
-use App\Contracts\Services\CatalogDataCollectorContract;
+use App\Contracts\Services\CarUpdateServiceContract;
 use App\Contracts\Services\FlashMessageContract;
-use App\Contracts\Services\TagsSyncServiceContract;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CarRequest;
 use App\Http\Requests\TagsRequest;
@@ -37,13 +37,13 @@ class CarsController extends Controller
         CarRequest $request,
         TagsRequest $tagsRequest,
         FlashMessageContract $flashMessage,
-        TagsSyncServiceContract $tagsSync,
+        CarCreationServiceContract $createServise,
     ): RedirectResponse {
         $fields = $request->validated();
+        $categories = $request->get('categories');
+        $tags = $tagsRequest->get('tags', []);
 
-        $car = $this->repository->create($fields);
-
-        $tagsSync->sync($car, $tagsRequest->get('tags', []));
+        $createServise->create($fields, $categories, $tags);
 
         $flashMessage->success('Модель успешно создана');
 
@@ -67,13 +67,13 @@ class CarsController extends Controller
         TagsRequest $tagsRequest,
         int $id,
         FlashMessageContract $flashMessage,
-        TagsSyncServiceContract $tagsSync,
+        CarUpdateServiceContract $updateServise,
     ): RedirectResponse {
         $fields = $request->validated();
+        $categories = $request->get('categories');
+        $tags = $tagsRequest->get('tags', []);
 
-        $car = $this->repository->update($id, $fields);
-
-        $tagsSync->sync($car, $tagsRequest->get('tags', []));
+        $updateServise->update($id, $fields, $categories, $tags);
 
         $flashMessage->success('Модель успешно изменена');
 

@@ -20,6 +20,8 @@ class CatalogDataCollector implements CatalogDataCollectorContract
         int $page = 1,
         string $pageName = 'page',
     ): CatalogDataDTO {
+        $category = null;
+
         $cars = $this->carsRepository->paginateForCatalog(
             $filterDTO,
             ['id', 'name', 'price', 'old_price'],
@@ -28,6 +30,6 @@ class CatalogDataCollector implements CatalogDataCollectorContract
             $pageName,
         );
 
-        return new CatalogDataDTO($filterDTO, $cars);
+        return new CatalogDataDTO($filterDTO, $cars, $category);
     }
 }

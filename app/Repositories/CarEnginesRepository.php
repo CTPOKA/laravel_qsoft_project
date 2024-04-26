@@ -17,7 +17,7 @@ class CarEnginesRepository implements CarEnginesRepositoryContract
         return $this->getModel()->get();
     }
 
-    public function getModel(): CarEngine
+    private function getModel(): CarEngine
     {
         return $this->model;
     }

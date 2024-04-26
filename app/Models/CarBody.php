@@ -12,6 +12,8 @@ class CarBody extends Model
     
     protected $fillable = ['name'];
 
+    protected $touches = ['cars'];
+
     public function cars(): HasMany
     {
         return $this->hasMany(Car::class);

@@ -44,6 +44,22 @@
     />
 </x-forms.groups.group>
 
+<x-forms.groups.group for="fieldCarCategories" :error="$errors->first('categories')">
+    <x-slot:label>Категории</x-slot:label>
+    <x-forms.inputs.select
+        id="fieldCarCategories"
+        name="categories[]"
+        :error="$errors->first('categories')"
+        multiple
+    >
+    @foreach ($categories as $category)
+        <option @selected(in_array($category->id, old('categories', $car->categories->pluck('id')->all()))) value="{{ $category->id }}">
+            {{ $category->name }}
+        </option>
+    @endforeach
+    </x-forms.inputs.select>
+</x-forms.groups.group>
+
 <x-forms.groups.group for="fieldCarDescription" :error="$errors->first('body')">
     <x-slot:label>Описание модели</x-slot:label>
     <x-forms.inputs.textarea 
@@ -106,7 +122,7 @@
         :error="$errors->first('car_class_id')"
     >
     @foreach ($carClasses as $class)
-        <option value="{{ $class->id }}" @selected($car->car_class_id === $class->id)>
+        <option @selected($car->car_class_id == old('car_class_id', $class->id)) value="{{ $class->id }}">
             {{ $class->name }}
         </option>
     @endforeach
@@ -121,7 +137,7 @@
         :error="$errors->first('car_body_id')"
     >
     @foreach ($carBodies as $body)
-        <option value="{{ $body->id }}" @selected($car->car_body_id === $body->id)>
+        <option @selected($car->car_body_id == old('car_body_id', $body->id)) value="{{ $body->id }}">
             {{ $body->name }}
         </option>
     @endforeach
@@ -136,7 +152,7 @@
         :error="$errors->first('car_engine_id')"
     >
     @foreach ($carEngines as $engine)
-        <option value="{{ $engine->id }}" @selected($car->car_engine_id === $engine->id)>
+        <option @selected($car->car_engine_id == old('car_engine_id', $engine->id)) value="{{ $engine->id }}">
             {{ $engine->name }}
         </option>
     @endforeach
