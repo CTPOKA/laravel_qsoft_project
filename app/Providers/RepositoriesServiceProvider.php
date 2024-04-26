@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Contracts\Repositories\ArticlesRepositoryContract;
+use App\Contracts\Repositories\BannersRepositoryContract;
 use App\Contracts\Repositories\CarBodiesRepositoryContract;
 use App\Contracts\Repositories\CarClassesRepositoryContract;
 use App\Contracts\Repositories\CarEnginesRepositoryContract;
@@ -11,6 +12,7 @@ use App\Contracts\Repositories\CategoriesRepositoryContract;
 use App\Contracts\Repositories\ImagesRepositoryContract;
 use App\Contracts\Repositories\TagsRepositoryContract;
 use App\Repositories\ArticlesRepository;
+use App\Repositories\BannersRepository;
 use App\Repositories\CarBodiesRepository;
 use App\Repositories\CarClassesRepository;
 use App\Repositories\CarEnginesRepository;
@@ -32,6 +34,7 @@ class RepositoriesServiceProvider extends ServiceProvider
         $this->app->singleton(TagsRepositoryContract::class, TagsRepository::class);
         $this->app->singleton(CategoriesRepositoryContract::class, CategoriesRepository::class);
         $this->app->singleton(ImagesRepositoryContract::class, ImagesRepository::class);
+        $this->app->singleton(BannersRepositoryContract::class, BannersRepository::class);
     }
     
     public function boot(): void
