@@ -129,4 +129,9 @@ class CarsRepository implements CarsRepositoryContract
 
         return $car;
     }
+
+    public function count(): int
+    {
+        return $this->getModel()->count();
+    }
 }
