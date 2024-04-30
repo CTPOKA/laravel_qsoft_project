@@ -41,6 +41,8 @@ class CatalogController extends Controller
             $filterDTO, 
             8,
             $request->get('page') ?? 1,
+            'page',
+            $category,
         );
 
         return view('pages.catalog', ['catalogData' => $catalogData]);
