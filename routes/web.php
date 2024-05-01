@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\ArticlesController;
 use App\Http\Controllers\Admin\CarsController;
 use App\Http\Controllers\AdminPagesController;
@@ -32,7 +33,10 @@ Route::get('/clients',  [PageController::class, 'clients'])->name('clients');
 Route::get('/articles',  [ArticlesPagesController::class, 'articles'])->name('articles');
 Route::get('/articles/{article:slug}',  [ArticlesPagesController::class, 'article'])->name('article');
 
-Route::prefix('admin')->name('admin.')->group(function (Router $router) {
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware('auth')
+    ->group(function (Router $router) {
     $router->get('/', [AdminPagesController::class, 'admin'])->name('admin');
     $router->resource('articles', ArticlesController::class)->except(['show']);
     $router->resource('cars', CarsController::class)->except(['show']);
@@ -42,3 +46,7 @@ Route::get('/catalog/{slug?}',  [CatalogController::class, 'catalog'])->name('ca
 Route::get('/products/{product}',  [CatalogController::class, 'products'])->name('products');
 
 Route::get('/salons', [SalonsController::class, 'index'])->name('salons');
+
+Route::get('/account', [AccountController::class, 'index'])->middleware('auth')->name('account');
+
+require __DIR__.'/auth.php';
