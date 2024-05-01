@@ -12,8 +12,10 @@
         "laravel/sanctum": "^3.3",
         "laravel/telescope": "^5.0",
         "laravel/tinker": "^2.8",
+        "league/fractal": "^0.20.1",
         "predis/predis": "^2.2",
-        "qschool/fakerphp-image-provider": "dev-master"
+        "qschool/fakerphp-image-provider": "dev-master",
+        "vinkla/shield": "^9.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",

@@ -99,6 +99,11 @@ return [
         ],
     ],
 
+    'basic' => [
+        'user' => env('BASIC_AUTH_USER'),
+        'password' => env('BASIC_AUTH_PASSWORD'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Password Confirmation Timeout
