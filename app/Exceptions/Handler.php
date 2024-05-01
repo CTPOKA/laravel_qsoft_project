@@ -2,6 +2,8 @@
 
 namespace App\Exceptions;
 
+use Dotenv\Exception\ValidationException;
+use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -26,5 +28,26 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        if ($request->is('api/*')) {
+            return $this->handleApiException($request, $exception);
+        }
+
+        return parent::render($request, $exception);
+    }
+
+    protected function handleApiException($request, Exception $exception)
+    {
+        if ($exception instanceof ValidationException) {
+            return response()->json([
+                'success' => false,
+                'errors' => $exception->getMessage(),
+            ], 422);
+        }
+
+        return parent::render($request, $exception);
     }
 }

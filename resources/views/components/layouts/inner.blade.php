@@ -2,7 +2,7 @@
     @isset($headerNavigation)
         {{ $headerNavigation }}
     @else
-        <x-panels.header_navigation :menu="[]" />
+        {{ Breadcrumbs::render('inner', $title) }}
     @endisset
     <main class="flex-1 container mx-auto bg-white flex">
         <div class="flex-1 grid grid-cols-4 lg:grid-cols-5 border-b">
