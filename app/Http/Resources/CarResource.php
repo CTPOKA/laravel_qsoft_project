@@ -10,6 +10,10 @@ class CarResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+<<<<<<< HEAD
+=======
+            'id' => $this->id,
+>>>>>>> feature/284477.laravel3-4
             'name' => $this->name,
             'body' => $this->body,
             'price' => $this->price,
@@ -21,7 +25,10 @@ class CarResource extends JsonResource
     public function with($request): array
     {
         return [
+<<<<<<< HEAD
             'car_id' => $this->id,
+=======
+>>>>>>> feature/284477.laravel3-4
             'success' => true,
         ];
     }

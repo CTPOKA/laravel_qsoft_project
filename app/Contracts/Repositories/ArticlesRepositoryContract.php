@@ -31,4 +31,12 @@ interface ArticlesRepositoryContract extends FlashCacheRepositoryContract
     public function update(Article $article, array $fields): Article;
 
     public function delete(int $id): void;
+
+    public function count(): int;
+
+    public function getLongestArticle(): Article;
+
+    public function getShortestArticle(): Article;
+
+    public function getMostTaggableArticle(): Article;
 }

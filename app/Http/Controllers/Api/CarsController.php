@@ -23,6 +23,10 @@ class CarsController extends Controller
             $request->get('perPage', 10),
             $request->get('page', 1),
             'page',
+<<<<<<< HEAD
+=======
+            ['image:id,path'],
+>>>>>>> feature/284477.laravel3-4
         ));
     }
 

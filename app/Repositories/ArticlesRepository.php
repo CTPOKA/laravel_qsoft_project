@@ -7,6 +7,7 @@ use App\Models\Article;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class ArticlesRepository implements ArticlesRepositoryContract
 {
@@ -102,7 +103,7 @@ class ArticlesRepository implements ArticlesRepositoryContract
 
     public function create(array $fields): Article
     {
-        return Article::create($fields);
+        return $this->getModel()->create($fields);
     }
 
     public function update(Article $article, array $fields): Article
@@ -115,5 +116,35 @@ class ArticlesRepository implements ArticlesRepositoryContract
     public function delete(int $id): void
     {
         $this->getModel()->where('id', $id)->delete();
+    }
+
+    public function count(): int
+    {
+        return $this->getModel()->count();
+    }
+
+    public function getLongestArticle(): Article
+    {
+        return $this->getModel()
+            ->select('title', 'id', DB::raw('CHAR_LENGTH(body) as body_length'))
+            ->orderByDesc('body_length')
+            ->first();
+    }
+
+    public function getShortestArticle(): Article
+    {
+        return $this->getModel()
+            ->select('title', 'id', DB::raw('CHAR_LENGTH(body) as body_length'))
+            ->orderBy('body_length')
+            ->first();
+    }
+
+    public function getMostTaggableArticle(): Article
+    {
+        return $this->getModel()
+            ->select('title', 'id')
+            ->withCount('tags')
+            ->orderByDesc('tags_count')
+            ->first();
     }
 }

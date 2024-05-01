@@ -99,11 +99,24 @@ return [
         ],
     ],
 
+<<<<<<< HEAD
     'basic' => [
         'user' => env('BASIC_AUTH_USER'),
         'password' => env('BASIC_AUTH_PASSWORD'),
     ],
 
+=======
+    'basic' => [ 
+        'user' => env('BASIC_AUTH_USER'), 
+        'password' => env('BASIC_AUTH_PASSWORD'), 
+    ],
+
+    'salons-api' => [ 
+        'user' => env('SALON_API_SERVICE_USER'), 
+        'password' => env('SALON_API_SERVICE_PASSWORD'), 
+    ],
+    
+>>>>>>> feature/284477.laravel3-4
     /*
     |--------------------------------------------------------------------------
     | Password Confirmation Timeout
