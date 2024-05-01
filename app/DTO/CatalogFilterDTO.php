@@ -5,8 +5,8 @@ namespace App\DTO;
 class CatalogFilterDTO
 {
     private ?string $model = null;
-    private ?int $minPrice = 0;
-    private ?int $maxPrice = 0;
+    private ?int $minPrice = null;
+    private ?int $maxPrice = null;
     private ?string $orderPrice = null;
     private ?string $orderModel = null;
     private array $allCategories = [];
