@@ -80,6 +80,5 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Blade::if('admin', fn ()=> true);
-        Blade::if('authorized', fn ()=> true);
     }
 }

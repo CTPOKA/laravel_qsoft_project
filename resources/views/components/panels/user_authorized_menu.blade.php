@@ -6,33 +6,28 @@
             </svg>
             <span>3</span>
         </a>
+        
         <a class="text-black hover:text-orange flex items-center space-x-1" href="#">
-            <svg xmlns="http://www.w3.org/2000/svg" class="inline-block text-orange h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span class="inline-block font-bold">Иван Владимирович</span>
+            <x-icons.user-circle class="inline-block text-orange h-4 w-4" />
+            <span class="inline-block font-bold">{{ auth()->user()?->name }}</span>
         </a>
-        <a class="text-gray-500 hover:text-orange flex items-center space-x-1" href="account.html">
-            <svg xmlns="http://www.w3.org/2000/svg" class="inline-block text-orange h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-            </svg>
+        <a class="text-gray-500 hover:text-orange flex items-center space-x-1" href="{{ route('account') }}">
+            <x-icons.house class="inline-block text-orange h-4 w-4" />
             <span>Личный кабинет</span>
         </a>
         @admin()
             <a class="text-gray-500 hover:text-orange flex items-center space-x-1" href="{{ route('admin.admin') }}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="inline-block text-orange h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M3 12v3c0 1.657 3.134 3 7 3s7-1.343 7-3v-3c0 1.657-3.134 3-7 3s-7-1.343-7-3z" />
-                    <path d="M3 7v3c0 1.657 3.134 3 7 3s7-1.343 7-3V7c0 1.657-3.134 3-7 3S3 8.657 3 7z" />
-                    <path d="M17 5c0 1.657-3.134 3-7 3S3 6.657 3 5s3.134-3 7-3 7 1.343 7 3z" />
-                </svg>
+                <x-icons.db class="inline-block text-orange h-4 w-4" />
                 <span>Админка</span>
             </a>
         @endadmin
-        <a class="text-gray-500 hover:text-orange flex items-center space-x-1" href="index.html">
-            <svg xmlns="http://www.w3.org/2000/svg" class="inline-block text-orange h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-            <span>Выйти</span>
-        </a>
+        <form method="post" action="{{ route('logout') }}" class="inline-block">
+            @csrf
+
+            <button type="submit" class="text-gray-500 hover:text-orange flex items-center space-x-1">
+                <x-icons.exit class="inline-block text-orange h-4 w-4" />
+                <span>Выйти</span>
+            </button>
+        </form>
     </nav>
 </div>
