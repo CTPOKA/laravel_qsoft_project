@@ -35,7 +35,7 @@ Route::get('/articles/{article:slug}',  [ArticlesPagesController::class, 'articl
 
 Route::prefix('admin')
     ->name('admin.')
-    ->middleware('auth')
+    ->middleware(['auth', 'admin'])
     ->group(function (Router $router) {
     $router->get('/', [AdminPagesController::class, 'admin'])->name('admin');
     $router->resource('articles', ArticlesController::class)->except(['show']);

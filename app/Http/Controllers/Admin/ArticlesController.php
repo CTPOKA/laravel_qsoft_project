@@ -9,6 +9,7 @@ use App\Contracts\Services\FlashMessageContract;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleRequest;
 use App\Http\Requests\TagsRequest;
+use App\Models\Article;
 use App\Repositories\ArticlesRepository;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
@@ -24,6 +25,8 @@ class ArticlesController extends Controller
 
     public function index(): Factory|View|Application
     {
+        $this->authorize('viewAny', Article::class);
+
         $articles = $this->repository->findAll()->sortByDesc('updated_at');
         
         return view('pages.admin.articles.list', ['articles' => $articles]);
@@ -31,6 +34,8 @@ class ArticlesController extends Controller
 
     public function create(): Factory|View|Application
     {
+        $this->authorize('create', Article::class);
+
         return view('pages.admin.articles.create');
     }
 
@@ -40,6 +45,8 @@ class ArticlesController extends Controller
         FlashMessageContract $flashMessage,
         ArticleCreationServiceContract $createServise,
     ): RedirectResponse {
+        $this->authorize('create', Article::class);
+
         $fields = $request->validated();
         $tags = $tagsRequest->get('tags', []);
 
@@ -63,6 +70,8 @@ class ArticlesController extends Controller
     {
         $article = $this->repository->getById($id, ['image', 'tags']);
 
+        $this->authorize('update', $article);
+
         return view('pages.admin.articles.edit', ['article' => $article]);
     }
 
@@ -73,6 +82,8 @@ class ArticlesController extends Controller
         FlashMessageContract $flashMessage,
         ArticleUpdateServiceContract $updateServise,
     ): RedirectResponse {
+        $this->authorize('update', [Article::class, $id]);
+
         $fields = $request->validated();
         $tags = $tagsRequest->get('tags', []);
 
@@ -92,6 +103,8 @@ class ArticlesController extends Controller
         ArticleRemoveServiceContract $removeService,
         FlashMessageContract $flashMessage,
     ): RedirectResponse {
+        $this->authorize('delete', [Article::class, $id]);
+
         try {
             $removeService->delete($id);
 
