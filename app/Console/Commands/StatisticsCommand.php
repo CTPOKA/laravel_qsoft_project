@@ -3,11 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Contracts\Services\StatisticsCommandServiceContract;
-use App\Models\Article;
-use App\Models\Car;
-use App\Models\Tag;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class StatisticsCommand extends Command
 {
