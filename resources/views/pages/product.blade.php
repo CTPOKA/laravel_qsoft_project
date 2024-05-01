@@ -27,7 +27,7 @@
         </script>
         <link href="/assets/css/inner_page_template_styles.css" rel="stylesheet">
     </x-slot:scripts>
-    <x-panels.header_navigation :menu="[]" />
+    {{ Breadcrumbs::render('product', $product) }}
     <main class="flex-1 container mx-auto bg-white">
         <div class="p-4">
             <h1 class="text-black text-3xl font-bold mb-4">@yield('title')</h1>
