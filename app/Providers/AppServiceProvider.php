@@ -11,6 +11,7 @@ use App\Contracts\Services\CarUpdateServiceContract;
 use App\Contracts\Services\CatalogDataCollectorContract;
 use App\Contracts\Services\FlashMessageContract;
 use App\Contracts\Services\ImagesServiceContract;
+use App\Contracts\Services\RolesServiceContract;
 use App\Contracts\Services\SalonsClientServiceContract;
 use App\Contracts\Services\StatisticsCommandServiceContract;
 use App\Contracts\Services\TagsSyncServiceContract;
@@ -19,13 +20,16 @@ use App\Services\CarsService;
 use App\Services\CatalogDataCollector;
 use App\Services\FlashMessage;
 use App\Services\ImagesService;
+use App\Services\RolesService;
 use App\Services\SalonsClientService;
 use App\Services\StatisticsCommandService;
 use App\Services\TagsSyncService;
 use Faker\Factory;
 use Faker\Generator;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use QSchool\FakerImageProvider\FakerImageProvider;
@@ -58,7 +62,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(ArticleRemoveServiceContract::class, ArticlesService::class);
 
         $this->app->singleton(StatisticsCommandServiceContract::class, StatisticsCommandService::class);
-
+        $this->app->singleton(RolesServiceContract::class, RolesService::class);
         $this->app->singleton(ImagesServiceContract::class, function () {
             /** @var Illuminate\Filesystem\FilesystemAdapter $disk */
             $disk = Storage::disk('public');
@@ -79,6 +83,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Blade::if('admin', fn ()=> true);
+        Blade::if('admin', fn () => Gate::allows('admin'));
     }
 }
