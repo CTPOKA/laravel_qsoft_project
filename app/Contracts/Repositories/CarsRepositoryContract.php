@@ -33,4 +33,6 @@ interface CarsRepositoryContract extends FlashCacheRepositoryContract
     public function delete(int $id): void;
 
     public function syncCategories(Car $car, array $categories = []): Car;
+
+    public function count(): int;
 }

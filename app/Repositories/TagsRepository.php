@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Contracts\HasTagsContract;
 use App\Contracts\Repositories\TagsRepositoryContract;
 use App\Models\Tag;
+use Illuminate\Support\Collection;
 
 class TagsRepository implements TagsRepositoryContract
 {
@@ -48,5 +49,14 @@ class TagsRepository implements TagsRepositoryContract
     private function getModel(): Tag
     {
         return $this->model;
+    }
+
+    public function articlesCount(): Collection
+    {
+        return $this->getModel()
+            ->select('name')
+            ->withCount('articles')
+            ->orderByDesc('articles_count')
+            ->get();
     }
 }
