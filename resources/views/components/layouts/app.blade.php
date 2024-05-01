@@ -13,7 +13,7 @@
     <link href="/assets/js/vendor/slick.css" rel="stylesheet">
     <script src="/assets/js/vendor/slick.min.js"></script>
     
-    @vite(['resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <title>Рога и Сила - {{ $pageTitle ?? 'Главная страница' }}</title>
     <link href="/assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
