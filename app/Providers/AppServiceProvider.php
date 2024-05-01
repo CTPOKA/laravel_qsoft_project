@@ -12,6 +12,7 @@ use App\Contracts\Services\CatalogDataCollectorContract;
 use App\Contracts\Services\FlashMessageContract;
 use App\Contracts\Services\ImagesServiceContract;
 use App\Contracts\Services\SalonsClientServiceContract;
+use App\Contracts\Services\StatisticsCommandServiceContract;
 use App\Contracts\Services\TagsSyncServiceContract;
 use App\Services\ArticlesService;
 use App\Services\CarsService;
@@ -19,6 +20,7 @@ use App\Services\CatalogDataCollector;
 use App\Services\FlashMessage;
 use App\Services\ImagesService;
 use App\Services\SalonsClientService;
+use App\Services\StatisticsCommandService;
 use App\Services\TagsSyncService;
 use Faker\Factory;
 use Faker\Generator;
@@ -54,6 +56,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(ArticleCreationServiceContract::class, ArticlesService::class);
         $this->app->singleton(ArticleUpdateServiceContract::class, ArticlesService::class);
         $this->app->singleton(ArticleRemoveServiceContract::class, ArticlesService::class);
+
+        $this->app->singleton(StatisticsCommandServiceContract::class, StatisticsCommandService::class);
 
         $this->app->singleton(ImagesServiceContract::class, function () {
             /** @var Illuminate\Filesystem\FilesystemAdapter $disk */
