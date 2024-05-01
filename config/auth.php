@@ -99,11 +99,16 @@ return [
         ],
     ],
 
-    'basic' => [
-        'user' => env('BASIC_AUTH_USER'),
-        'password' => env('BASIC_AUTH_PASSWORD'),
+    'basic' => [ 
+        'user' => env('BASIC_AUTH_USER'), 
+        'password' => env('BASIC_AUTH_PASSWORD'), 
     ],
 
+    'salons-api' => [ 
+        'user' => env('SALON_API_SERVICE_USER'), 
+        'password' => env('SALON_API_SERVICE_PASSWORD'), 
+    ],
+    
     /*
     |--------------------------------------------------------------------------
     | Password Confirmation Timeout

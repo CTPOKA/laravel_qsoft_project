@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminPagesController;
 use App\Http\Controllers\ArticlesPagesController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\SalonsController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
@@ -40,3 +41,4 @@ Route::prefix('admin')->name('admin.')->group(function (Router $router) {
 Route::get('/catalog/{slug?}',  [CatalogController::class, 'catalog'])->name('catalog');
 Route::get('/products/{product}',  [CatalogController::class, 'products'])->name('products');
 
+Route::get('/salons', [SalonsController::class, 'index'])->name('salons');
