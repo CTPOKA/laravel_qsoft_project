@@ -13,7 +13,8 @@
     <link href="/assets/js/vendor/slick.css" rel="stylesheet">
     <script src="/assets/js/vendor/slick.min.js"></script>
     
-    <script src="/assets/js/script.js"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <title>Рога и Сила - {{ $pageTitle ?? 'Главная страница' }}</title>
     <link href="/assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 
@@ -32,7 +33,11 @@
                     </span>
                 </div>
                 <div>
-                    <x-panels.user_authorized_menu />
+                    @auth()
+                        <x-panels.user_authorized_menu />
+                    @else
+                        <x-panels.user_not_authorized_menu />
+                    @endauth
                 </div>
             </div>
         </div>
@@ -60,8 +65,8 @@
     {{ $slot }}
 
     <footer class="container mx-auto">
-        @isset($footerNavigation)
-        {{ $footerNavigation }}
+        @isset ($footerNavigation)
+            {{ $footerNavigation }}
         @else
             <section class="block sm:flex bg-white p-4">
             <div class="flex-1">

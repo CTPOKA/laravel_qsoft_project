@@ -57,6 +57,9 @@ class CarsRepository implements CarsRepositoryContract
         array $relations = [],
     ): LengthAwarePaginator
     {
+        return $this->catalogQuery($filterDTO)
+        ->when($relations, fn ($query) => $query->with($relations))
+        ->paginate($perPage, $fields, $pageName, $page);
         return Cache::tags(['cars', 'images', 'tags', 'carEngines', 'carBodies', 'carClasses'])->remember(
             sprintf('paginateForCatalog|%s|',
                 serialize([
@@ -79,8 +82,8 @@ class CarsRepository implements CarsRepositoryContract
     {
         return $this->getModel()
             ->when($dto->getModel() !== null, fn ($query) => $query->where('name', 'like', "%{$dto->getModel()}%"))
-            ->when($dto->getMinPrice() !== null, fn ($query) => $query->where('price', '>=', $dto->getMinPrice()))
-            ->when($dto->getMaxPrice() !== null, fn ($query) => $query->where('price', '<=', $dto->getMaxPrice()))
+            ->when($dto->getMinPrice() != null, fn ($query) => $query->where('price', '>=', $dto->getMinPrice()))
+            ->when($dto->getMaxPrice() != null, fn ($query) => $query->where('price', '<=', $dto->getMaxPrice()))
             ->when($dto->getOrderPrice() !== null, fn ($query) => $query->orderBy('price', $dto->getOrderPrice() === 'desc' ? 'desc' : 'asc'))
             ->when($dto->getOrderModel() !== null, fn ($query) => $query->orderBy('name', $dto->getOrderModel() === 'desc' ? 'desc' : 'asc'))
             ->when(! empty($dto->getAllCategories()), fn ($query) => $query->whereHas('categories', fn ($query) => $query->whereIn('id', $dto->getAllCategories())))
@@ -125,5 +128,10 @@ class CarsRepository implements CarsRepositoryContract
         $car->categories()->sync($categories);
 
         return $car;
+    }
+
+    public function count(): int
+    {
+        return $this->getModel()->count();
     }
 }

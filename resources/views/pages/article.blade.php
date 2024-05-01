@@ -1,6 +1,6 @@
 <x-layouts.inner page-title="{{ $title = $article->title }}" title="{{ $title }}">
     <x-slot:header-navigation>
-        <x-panels.header_navigation :menu="[['title' => 'Новости', 'url' => route('articles')]]" />
+        {{ Breadcrumbs::render('article', $article) }}
     </x-slot:header-navigation>
     <div class="space-y-4">
         <img src="{{ $article->imageUrl }}" alt="" title="">
