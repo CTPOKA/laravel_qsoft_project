@@ -14,7 +14,7 @@ class CarResource extends JsonResource
             'body' => $this->body,
             'price' => $this->price,
             'old_price' => $this->old_price,
-            'car_body' => $this->carBody?->name,
+            'car_body_id' => $this->car_body_id,
         ];
     }
 
