@@ -11,13 +11,14 @@ use App\Contracts\Services\CarUpdateServiceContract;
 use App\Contracts\Services\CatalogDataCollectorContract;
 use App\Contracts\Services\FlashMessageContract;
 use App\Contracts\Services\ImagesServiceContract;
+use App\Contracts\Services\SalonsClientServiceContract;
 use App\Contracts\Services\TagsSyncServiceContract;
-use App\Models\Image;
 use App\Services\ArticlesService;
 use App\Services\CarsService;
 use App\Services\CatalogDataCollector;
 use App\Services\FlashMessage;
 use App\Services\ImagesService;
+use App\Services\SalonsClientService;
 use App\Services\TagsSyncService;
 use Faker\Factory;
 use Faker\Generator;
@@ -58,6 +59,14 @@ class AppServiceProvider extends ServiceProvider
             /** @var Illuminate\Filesystem\FilesystemAdapter $disk */
             $disk = Storage::disk('public');
             return $this->app->make(ImagesService::class, ['disk' => $disk]);
+        });
+
+        $this->app->singleton(SalonsClientServiceContract::class, function () {
+            return $this->app->make(SalonsClientService::class, [
+                'user' => config('auth.basic.user'),
+                'password' => config('auth.basic.password'),
+                'baseUrl' => config('services.salonApi.url'),
+            ]);
         });
     }
 
