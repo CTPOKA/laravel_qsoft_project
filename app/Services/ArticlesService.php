@@ -8,7 +8,11 @@ use App\Contracts\Services\ArticleRemoveServiceContract;
 use App\Contracts\Services\ArticleUpdateServiceContract;
 use App\Contracts\Services\ImagesServiceContract;
 use App\Contracts\Services\TagsSyncServiceContract;
+use App\Events\ArticleCreatedEvent;
+use App\Events\ArticleDeletedEvent;
+use App\Events\ArticleUpdatedEvent;
 use App\Models\Article;
+use Illuminate\Support\Facades\Event;
 
 class ArticlesService implements ArticleCreationServiceContract, ArticleUpdateServiceContract, ArticleRemoveServiceContract
 {
@@ -28,15 +32,17 @@ class ArticlesService implements ArticleCreationServiceContract, ArticleUpdateSe
             $fields['image_id'] = $image->id;
         }
 
-        $Article = $this->articlesRepository->create($fields);
+        $article = $this->articlesRepository->create($fields);
 
         if ($tags !== null) {
-            $this->tagsSync->sync($Article, $tags);
+            $this->tagsSync->sync($article, $tags);
         }
 
         $this->articlesRepository->flashCache();
         
-        return $Article;
+        Event::dispatch(new ArticleCreatedEvent($article));
+
+        return $article;
     }
 
     public function update(int $id, array $fields, ?array $tags = null): Article
@@ -69,6 +75,8 @@ class ArticlesService implements ArticleCreationServiceContract, ArticleUpdateSe
 
         $this->articlesRepository->flashCache();
 
+        Event::dispatch(new ArticleUpdatedEvent($article));
+
         return $article;
     }
 
@@ -83,5 +91,7 @@ class ArticlesService implements ArticleCreationServiceContract, ArticleUpdateSe
         $this->articlesRepository->delete($id);
 
         $this->articlesRepository->flashCache();
+
+        Event::dispatch(new ArticleDeletedEvent($article));
     }
 }
