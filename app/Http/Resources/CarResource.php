@@ -10,7 +10,6 @@ class CarResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
             'name' => $this->name,
             'body' => $this->body,
             'price' => $this->price,
@@ -22,6 +21,7 @@ class CarResource extends JsonResource
     public function with($request): array
     {
         return [
+            'car_id' => $this->id,
             'success' => true,
         ];
     }

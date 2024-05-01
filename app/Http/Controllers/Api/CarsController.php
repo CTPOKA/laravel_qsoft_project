@@ -23,7 +23,6 @@ class CarsController extends Controller
             $request->get('perPage', 10),
             $request->get('page', 1),
             'page',
-            ['image:id,path'],
         ));
     }
 
