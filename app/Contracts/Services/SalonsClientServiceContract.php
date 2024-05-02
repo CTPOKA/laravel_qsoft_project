@@ -7,10 +7,5 @@ interface SalonsClientServiceContract
     /**
      * @throws RequestException
      */
-    public function findAll(): array;
-
-    /**
-     * @throws RequestException
-     */
-    public function findForMainPage(int $limit): array;
+    public function find(): array;
 }

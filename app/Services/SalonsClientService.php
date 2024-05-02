@@ -23,23 +23,11 @@ class SalonsClientService implements SalonsClientServiceContract
     /**
      * @throws RequestException
      */
-    public function findAll(): array
+    public function find(array $parametrs = []): array
     {
         return $this->getClient()
             ->withBasicAuth($this->user, $this->password)
-            ->get('/salons')
-            ->throw()
-            ->json();
-    }
-
-    /**
-     * @throws RequestException
-     */
-    public function findForMainPage(int $limit): array
-    {
-        return $this->getClient()
-            ->withBasicAuth($this->user, $this->password)
-            ->get("/salons?limit={$limit}&in_random_order")
+            ->get('/salons', $parametrs)
             ->throw()
             ->json();
     }
