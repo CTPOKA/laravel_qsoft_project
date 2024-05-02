@@ -8,7 +8,11 @@ use App\Contracts\Services\ArticleRemoveServiceContract;
 use App\Contracts\Services\ArticleUpdateServiceContract;
 use App\Contracts\Services\ImagesServiceContract;
 use App\Contracts\Services\TagsSyncServiceContract;
+use App\Events\ArticleCreatedEvent;
+use App\Events\ArticleDeletedEvent;
+use App\Events\ArticleUpdatedEvent;
 use App\Models\Article;
+use Illuminate\Support\Facades\Event;
 
 class ArticlesService implements ArticleCreationServiceContract, ArticleUpdateServiceContract, ArticleRemoveServiceContract
 {
@@ -23,51 +27,58 @@ class ArticlesService implements ArticleCreationServiceContract, ArticleUpdateSe
     {
         $fields['published_at'] = $fields['published'] ? now() : null;
 
-        if (! empty($fields['image'])) {
-            $image = $this->imagesService->createImage($fields['image']);
-            $fields['image_id'] = $image->id;
-        }
+        DB::transaction( function() use (&$article, $fields, $tags) {
+            if (! empty($fields['image'])) {
+                $image = $this->imagesService->createImage($fields['image']);
+                $fields['image_id'] = $image->id;
+            }
 
-        $Article = $this->articlesRepository->create($fields);
+        $article = $this->articlesRepository->create($fields);
 
         if ($tags !== null) {
-            $this->tagsSync->sync($Article, $tags);
+            $this->tagsSync->sync($article, $tags);
         }
 
         $this->articlesRepository->flashCache();
         
-        return $Article;
+        Event::dispatch(new ArticleCreatedEvent($article));
+
+        return $article;
     }
 
     public function update(int $id, array $fields, ?array $tags = null): Article
     {
         $article = $this->articlesRepository->getById($id);
-        $oldImageId = null;
 
         $published = $fields['published'];
+
         if (is_null($article->published_at) && $published) {
             $fields['published_at'] = now();
         } elseif (! is_null($article->published_at) && ! $published) {
             $fields['published_at'] = null;
         }
 
-        if (! empty($fields['image'])) {
-            $image = $this->imagesService->createImage($fields['image']);
-            $fields['image_id'] = $image->id;
-            $oldImageId = $article->image_id;
-        }
-
-        $this->articlesRepository->update($article, $fields);
-
-        if ($tags !== null) {
-            $this->tagsSync->sync($article, $tags);
-        }
-
-        if ($oldImageId !== null) {
-            $this->imagesService->deleteImage($oldImageId);
-        }
+        DB::transaction( function() use (&$article, $fields, $tags) {
+            if (! empty($fields['image'])) {
+                $image = $this->imagesService->createImage($fields['image']);
+                $fields['image_id'] = $image->id;
+                $oldImageId = $article->image_id;
+            }
+    
+            $this->articlesRepository->update($article, $fields);
+    
+            if ($tags !== null) {
+                $this->tagsSync->sync($article, $tags);
+            }
+    
+            if ($oldImageId !== null) {
+                $this->imagesService->deleteImage($oldImageId);
+            }
+        });
 
         $this->articlesRepository->flashCache();
+
+        Event::dispatch(new ArticleUpdatedEvent($article));
 
         return $article;
     }
@@ -76,12 +87,16 @@ class ArticlesService implements ArticleCreationServiceContract, ArticleUpdateSe
     {
         $article = $this->articlesRepository->getById($id);
 
-        if (! empty($article->image_id)) {
-            $this->imagesService->deleteImage($article->image_id);
-        }
-
-        $this->articlesRepository->delete($id);
+        DB::transaction( function() use ($id, $article) {
+            if (! empty($article->image_id)) {
+                $this->imagesService->deleteImage($article->image_id);
+            }
+    
+            $this->articlesRepository->delete($id);
+        });
 
         $this->articlesRepository->flashCache();
+
+        Event::dispatch(new ArticleDeletedEvent($article));
     }
 }
