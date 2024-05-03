@@ -42,7 +42,7 @@ class SalonsRepository implements SalonsRepositoryContract
             return Cache::tags($this->cacheTags())->remember(
                 "salons|$limit",
                 300,
-                fn () => $this->createCollectionFromResponse($this->apiClient->find(['limit' => $limit, 'in_random_order' => true]))
+                fn () => $this->createCollectionFromResponse($this->apiClient->find(limit: $limit, inRandomOrder: true))
             );
         } catch (RequestException $exception) {
             return Cache::tags($this->cacheTags())->remember("salons|$limit", 120, fn () => collect());
