@@ -23,8 +23,18 @@ class SalonsClientService implements SalonsClientServiceContract
     /**
      * @throws RequestException
      */
-    public function find(array $parametrs = []): array
+    public function find(?int $limit = null, bool $inRandomOrder = false): array
     {
+        $parametrs = [];
+
+        if ($limit !== null) {
+            $parametrs['limit'] = $limit;
+        }
+
+        if ($inRandomOrder) {
+            $parametrs['in_random_order'] = true;
+        }
+
         return $this->getClient()
             ->withBasicAuth($this->user, $this->password)
             ->get('/salons', $parametrs)

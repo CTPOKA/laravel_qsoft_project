@@ -7,5 +7,5 @@ interface SalonsClientServiceContract
     /**
      * @throws RequestException
      */
-    public function find(): array;
+    public function find(?int $limit = null, bool $inRandomOrder = false): array;
 }
