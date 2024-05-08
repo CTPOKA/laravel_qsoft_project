@@ -5,7 +5,9 @@ use App\Http\Controllers\Admin\ArticlesController;
 use App\Http\Controllers\Admin\CarsController;
 use App\Http\Controllers\AdminPagesController;
 use App\Http\Controllers\ArticlesPagesController;
+use App\Http\Controllers\BasketController;
 use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\SalonsController;
 use Illuminate\Routing\Router;
@@ -47,6 +49,14 @@ Route::get('/products/{product}',  [CatalogController::class, 'products'])->name
 
 Route::get('/salons', [SalonsController::class, 'index'])->name('salons');
 
-Route::get('/account', [AccountController::class, 'index'])->middleware('auth')->name('account');
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/basket', [BasketController::class, 'index'])->name('basket');
+    Route::post('/basket/store', [BasketController::class, 'store'])->name('basket.store');
+    Route::delete('/basket/{basket}', [BasketController::class, 'destroy'])->name('basket.destroy');
+
+    Route::get('/account', [OrderController::class, 'index'])->name('account');
+});
 
 require __DIR__.'/auth.php';
