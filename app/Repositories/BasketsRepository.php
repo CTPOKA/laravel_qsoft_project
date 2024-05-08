@@ -56,4 +56,9 @@ class BasketsRepository implements BasketsRepositoryContract
     {
         return $this->model;
     }
+
+    public function clear(int $userId): void
+    {
+        $this->getModel()->where('user_id', $userId)->delete();
+    }
 }

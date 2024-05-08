@@ -85,7 +85,11 @@
         <span class="text-sm font-medium text-gray-400 mr-1">Общая сумма:</span>
         <span class="text-lg font-bold text-gray-800 "><x-price :price="$baskets->sum(fn ($basket) => $basket->count * $basket->car->price)" /></span>
     </div>
-    <form class="pt-3 flex items-center justify-between">
+    <form method="post" action="{{ route('order.store') }}" class="pt-3 flex items-center justify-between">
+        @csrf
+        <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+        <input type="hidden" name="count" value="{{ auth()->user()->basketCount }}">
+        <input type="hidden" name="total_cost" value="{{ $baskets->sum(fn ($basket) => $basket->count * $basket->car->price) ?: 0 }}">
         <button type="submit"
             class="bg-orange hover:bg-opacity-70 focus:outline-none text-white font-bold py-2 px-4 rounded">Оформить
             заказ</button>

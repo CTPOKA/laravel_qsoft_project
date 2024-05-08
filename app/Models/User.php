@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
@@ -52,5 +53,10 @@ class User extends Authenticatable
     public function baskets(): HasMany
     {
         return $this->hasMany(Basket::class);
+    }
+
+    public function basketCount(): Attribute
+    {
+        return Attribute::get(fn () => $this->baskets?->count());
     }
 }

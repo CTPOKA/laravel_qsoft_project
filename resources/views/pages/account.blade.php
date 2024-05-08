@@ -34,7 +34,7 @@
                                 {{ $order->count }}
                             </td>
                             <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-                                {{ $order->total_price }}
+                                {{ $order->total_cost }}
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center">

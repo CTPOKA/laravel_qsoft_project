@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\Repositories\BasketsRepositoryContract;
 use App\Contracts\Repositories\OrdersRepositoryContract;
 use App\Contracts\Services\FlashMessageContract;
 use App\Http\Requests\OrderRequest;
@@ -20,14 +21,15 @@ class OrderController extends Controller
         return view('pages.account', ['orders' => $orders]);
     }
 
-    public function store(OrderRequest $request, FlashMessageContract $flashMessage)
+    public function store(OrderRequest $request, FlashMessageContract $flashMessage, BasketsRepositoryContract $basketRepository)
     {
         $fields = $request->validated();
-        
         $this->repository->create($fields);
 
-        $flashMessage->success('Заказ добавлен');
+        $basketRepository->clear($fields['user_id']);
 
+        $flashMessage->success('Заказ добавлен');
+        
         return back();
     }
 }

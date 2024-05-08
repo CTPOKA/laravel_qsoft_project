@@ -18,4 +18,6 @@ interface BasketsRepositoryContract
     public function delete(int $id): void;
 
     public function count(int $userId): int;
+
+    public function clear(int $userId): void;
 }

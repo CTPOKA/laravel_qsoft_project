@@ -57,6 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/basket/{basket}', [BasketController::class, 'destroy'])->name('basket.destroy');
 
     Route::get('/account', [OrderController::class, 'index'])->name('account');
+    Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');
 });
 
 require __DIR__.'/auth.php';
