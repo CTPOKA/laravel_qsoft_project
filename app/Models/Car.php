@@ -71,4 +71,9 @@ class Car extends Model implements HasTagsContract
     {
         return $this->belongsToMany(Image::class);
     }
+
+    public function baskets(): BelongsToMany
+    {
+        return $this->belongsToMany(Basket::class);
+    }
 }
