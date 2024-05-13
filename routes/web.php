@@ -53,9 +53,12 @@ Route::get('/salons', [SalonsController::class, 'index'])->name('salons');
 
 Route::middleware('auth')->group(function () {
     Route::get('/basket', [BasketController::class, 'index'])->name('basket');
-    Route::post('/basket/store', [BasketController::class, 'store'])->name('basket.store');
+    Route::post('/basket/add', [BasketController::class, 'addOne'])->name('basket.add');
     Route::delete('/basket/{basket}', [BasketController::class, 'destroy'])->name('basket.destroy');
+    Route::post('/basket/update', [BasketController::class, 'update'])->name('basket.update');
+    Route::get('/basket/cost', [BasketController::class, 'getBasketCost'])->name('basket.cost');
 
+    Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');
     Route::get('/account', [OrderController::class, 'index'])->name('account');
     Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');
 });

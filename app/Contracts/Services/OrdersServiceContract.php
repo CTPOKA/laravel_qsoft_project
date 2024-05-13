@@ -1,17 +1,20 @@
 <?php
 
-namespace App\Contracts\Repositories;
+namespace App\Contracts\Services;
 
 use App\Models\Order;
 use Illuminate\Support\Collection;
 
-interface OrdersRepositoryContract
+interface OrdersServiceContract
 {
+    /**
+     * @throws RequestException
+     */
+    public function payOrder(int $id): Order;
+
     public function findUserOrders(int $userId, array $relations = []): Collection;
 
     public function findAllUnpaid(array $relations = []): Collection;
-
-    public function getById(int $id, array $relations = []): Order;
 
     public function create(array $fields): Order;
 

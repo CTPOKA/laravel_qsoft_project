@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -57,6 +58,15 @@ class User extends Authenticatable
 
     public function basketCount(): Attribute
     {
-        return Attribute::get(fn () => $this->baskets?->count());
+        return Attribute::get(fn () => $this->baskets()->sum('count'));
+    }
+
+    public function basketCost(): Attribute
+    {
+        return Attribute::get(
+            fn () => $this->baskets()
+                ->join('cars', 'car_id', '=', 'cars.id')
+                ->sum(DB::raw('count * price'))
+        );
     }
 }

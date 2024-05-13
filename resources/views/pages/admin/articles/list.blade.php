@@ -31,7 +31,7 @@
                 <td class="border px-4 py-2">{{ $article->title }}</td>
                 <td class="border px-4 py-2">{{ $article->description }}</td>
                 <td class="border px-4 py-2">{{ $article->published_at }}</td>
-                <td class="border px-4 py-2">Статья</td>
+                <td class="border px-4 py-2">{{ $article->tags->pluck('name')->implode(', ') }}</td>
                 <td class="border px-4 py-2">
                     <div class="flex items-center">
                         <a href="{{ route('admin.articles.edit', ['article' => $article]) }}" class="inline-block bg-orange hover:bg-opacity-70 focus:outline-none text-white font-bold py-2 px-4 rounded" title="Редактировать">
