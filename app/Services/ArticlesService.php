@@ -12,6 +12,7 @@ use App\Events\ArticleCreatedEvent;
 use App\Events\ArticleDeletedEvent;
 use App\Events\ArticleUpdatedEvent;
 use App\Models\Article;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 
 class ArticlesService implements ArticleCreationServiceContract, ArticleUpdateServiceContract, ArticleRemoveServiceContract
@@ -27,20 +28,21 @@ class ArticlesService implements ArticleCreationServiceContract, ArticleUpdateSe
     {
         $fields['published_at'] = $fields['published'] ? now() : null;
 
-        DB::transaction( function() use (&$article, $fields, $tags) {
-            if (! empty($fields['image'])) {
+        DB::transaction(function () use (&$article, $fields, $tags) {
+            if (!empty($fields['image'])) {
                 $image = $this->imagesService->createImage($fields['image']);
                 $fields['image_id'] = $image->id;
             }
 
-        $article = $this->articlesRepository->create($fields);
+            $article = $this->articlesRepository->create($fields);
 
-        if ($tags !== null) {
-            $this->tagsSync->sync($article, $tags);
-        }
+            if ($tags !== null) {
+                $this->tagsSync->sync($article, $tags);
+            }
+        });
 
         $this->articlesRepository->flashCache();
-        
+
         Event::dispatch(new ArticleCreatedEvent($article));
 
         return $article;
@@ -54,23 +56,24 @@ class ArticlesService implements ArticleCreationServiceContract, ArticleUpdateSe
 
         if (is_null($article->published_at) && $published) {
             $fields['published_at'] = now();
-        } elseif (! is_null($article->published_at) && ! $published) {
+        } elseif (!is_null($article->published_at) && !$published) {
             $fields['published_at'] = null;
         }
 
-        DB::transaction( function() use (&$article, $fields, $tags) {
-            if (! empty($fields['image'])) {
+        DB::transaction(function () use (&$article, $fields, $tags) {
+            $oldImageId = $article->image_id;
+            
+            if (!empty($fields['image'])) {
                 $image = $this->imagesService->createImage($fields['image']);
                 $fields['image_id'] = $image->id;
-                $oldImageId = $article->image_id;
             }
-    
+
             $this->articlesRepository->update($article, $fields);
-    
+
             if ($tags !== null) {
                 $this->tagsSync->sync($article, $tags);
             }
-    
+
             if ($oldImageId !== null) {
                 $this->imagesService->deleteImage($oldImageId);
             }
@@ -87,11 +90,11 @@ class ArticlesService implements ArticleCreationServiceContract, ArticleUpdateSe
     {
         $article = $this->articlesRepository->getById($id);
 
-        DB::transaction( function() use ($id, $article) {
-            if (! empty($article->image_id)) {
+        DB::transaction(function () use ($id, $article) {
+            if (!empty($article->image_id)) {
                 $this->imagesService->deleteImage($article->image_id);
             }
-    
+
             $this->articlesRepository->delete($id);
         });
 

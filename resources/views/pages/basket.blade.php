@@ -22,6 +22,8 @@
                         </td>
                         <td class="px-6 py-4">
                             <form data-basket data-id="{{ $basket->car->id }}" class="flex items-center space-x-3">
+                                @csrf
+
                                 <button type="submit" data-basket-decrement
                                     class="inline-flex items-center p-1 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
                                     <span class="sr-only">Quantity button</span>
@@ -32,7 +34,7 @@
                                     </svg>
                                 </button>
                                 <div>
-                                    <input type="number" value="{{ $basket->count }}" id="first_product"
+                                    <input type="number" value="{{ $basket->count }}" name="product_count" min="1"
                                         class="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         placeholder="1" required>
                                 </div>
@@ -76,20 +78,19 @@
                         </td>
                     </tr>
                 @empty
-                    <div><p class="text-black text-xl">Корзина пуста</p></div>
+                    <div>
+                        <p class="text-black text-xl">Корзина пуста</p>
+                    </div>
                 @endforelse
             </tbody>
         </table>
     </div>
     <div class="flex items-center pt-6">
         <span class="text-sm font-medium text-gray-400 mr-1">Общая сумма:</span>
-        <span class="text-lg font-bold text-gray-800 "><x-price :price="$baskets->sum(fn ($basket) => $basket->count * $basket->car->price)" /></span>
+        <span id="totalCost" class="text-lg font-bold text-gray-800 "><x-price :price="auth()->user()->basketCost" /></span>
     </div>
     <form method="post" action="{{ route('order.store') }}" class="pt-3 flex items-center justify-between">
         @csrf
-        <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-        <input type="hidden" name="count" value="{{ auth()->user()->basketCount }}">
-        <input type="hidden" name="total_cost" value="{{ $baskets->sum(fn ($basket) => $basket->count * $basket->car->price) ?: 0 }}">
         <button type="submit"
             class="bg-orange hover:bg-opacity-70 focus:outline-none text-white font-bold py-2 px-4 rounded">Оформить
             заказ</button>
@@ -105,3 +106,52 @@
     <!--            </div>-->
 
 </x-layouts.inner2>
+<script>
+    $('[data-basket]').each(function() {
+        let $basket = $(this);
+        let carId = $basket.data('id');
+
+        let $incrementButton = $basket.find('[data-basket-increment]');
+        let $decrementButton = $basket.find('[data-basket-decrement]');
+        let $inputField = $basket.find('input[name="product_count"]');
+
+        $basket.on('submit', function(event) {
+            event.preventDefault();
+        })
+
+        $incrementButton.on('click', function() {
+            let currentValue = parseInt($inputField.val());
+            $inputField.val(currentValue + 1);
+            $inputField.change();
+        })
+
+        $decrementButton.on('click', function() {
+            let currentValue = parseInt($inputField.val());
+            $inputField.val(Math.max(1, currentValue - 1));
+            $inputField.change();
+        })
+
+        $inputField.on('change', function() {
+            let value = Math.max(1, parseInt($inputField.val()));
+            $inputField.val(value);
+            $.ajax({
+                url: "/basket/update",
+                type: "POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    car_id: carId,
+                    count: value,
+                },
+                success: function() {
+                    $.ajax({
+                        url: '/basket/cost',
+                        type: 'GET',
+                        success: function(data) {
+                            $('#totalCost').html(data);
+                        }
+                    });
+                }
+            });
+        })
+    })
+</script>

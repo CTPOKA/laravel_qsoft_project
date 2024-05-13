@@ -16,9 +16,16 @@ class BasketRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'car_id' => ['sometimes', 'exists:' . Car::class . ',id'],
-            'user_id' => ['sometimes', 'exists:' . User::class . ',id'],
+            'car_id' => ['required', 'exists:' . Car::class . ',id'],
+            'user_id' => ['required', 'exists:' . User::class . ',id'],
             'count' => ['sometimes', 'integer', 'min:1'],
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'user_id' => $this->user()->id,
+        ]);
     }
 }

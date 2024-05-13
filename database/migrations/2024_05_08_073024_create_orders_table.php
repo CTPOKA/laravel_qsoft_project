@@ -11,15 +11,23 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
-            $table->unsignedInteger('count');
-            $table->unsignedInteger('total_cost');
             $table->string('status')->default('Не оплачен');
             $table->timestamps();
+        });
+
+        Schema::create('car_order', function (Blueprint $table) {
+            $table->foreignId('car_id')->references('id')->on('cars')->cascadeOnDelete();
+            $table->foreignId('order_id')->references('id')->on('orders')->cascadeOnDelete();
+            $table->unsignedInteger('count')->default(1);
+            $table->unsignedInteger('cost');
+            $table->primary(['order_id', 'car_id']);
         });
     }
 
     public function down(): void
     {
+        Schema::dropIfExists('car_order');
+        
         Schema::dropIfExists('orders');
     }
 };
