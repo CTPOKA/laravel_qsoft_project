@@ -1,4 +1,4 @@
-<x-layouts.admin page-title="Управление новостями" title="Управление новостями">
+<x-layouts.admin page-title="Управление моделями" title="Управление моделями">
     
     <section class="pb-4">
         <div class="my-6">
