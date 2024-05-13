@@ -33,5 +33,9 @@ return [
 
     'salonApi' => [
         'url' => env('SALON_API_SERVICE_URL'),
-    ]
+    ],
+
+    'payOrderApi' => [
+        'url' => env('PAY_ORDER_API_SERVICE_URL'),
+    ],
 ];

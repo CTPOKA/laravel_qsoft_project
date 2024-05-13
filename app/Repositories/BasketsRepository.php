@@ -12,27 +12,31 @@ class BasketsRepository implements BasketsRepositoryContract
     {
     }
 
-    public function findAll(int $userId): Collection
+    public function getById(int $id, array $relations = []): Basket
     {
-        return $this->getModel()->where('user_id', $userId)->get();
+        return $this->getModel()->where('id', $id);
     }
 
-    public function getByCarId(int $carId, int $userId, array $relations = []): ?Basket
+    public function findUserBaskets(int $userId, array $relations = []): Collection
     {
-        return $this->getModel()->where('car_id', $carId)->where('user_id', $userId)->first();
+        return $this->getModel()
+            ->where('user_id', $userId)
+            ->when($relations, fn ($query) => $query->with($relations))
+            ->get();
+    }
+
+    public function getUserBasketsByCarId(int $userId, int $carId, array $relations = []): ?Basket
+    {
+        return $this->getModel()
+            ->where('car_id', $carId)
+            ->where('user_id', $userId)
+            ->when($relations, fn ($query) => $query->with($relations))
+            ->first();
     }
 
     public function create(array $fields): Basket
     {
-        $basket = $this->getByCarId($fields['car_id'], $fields['user_id']);
-
-        if ($basket) {
-            $this->update($basket, ['count' => $basket->count + 1]);
-            return $basket;
-        }
-        else {
-            return $this->getModel()->create($fields);
-        }
+        return $this->getModel()->create($fields);
     }
 
     public function update(Basket $basket, array $fields): Basket
@@ -42,12 +46,12 @@ class BasketsRepository implements BasketsRepositoryContract
         return $basket;
     }
 
-    public function delete(int $id): void
+    public function delete(Basket $basket): void
     {
-        $this->getModel()->where('id', $id)->delete();
+        $this->$basket->delete();
     }
 
-    public function count(int $userId): int
+    public function countUserBaskets(int $userId): int
     {
         return $this->getModel()->where('user_id', $userId)->count();
     }
@@ -57,7 +61,7 @@ class BasketsRepository implements BasketsRepositoryContract
         return $this->model;
     }
 
-    public function clear(int $userId): void
+    public function clearUserBaskets(int $userId): void
     {
         $this->getModel()->where('user_id', $userId)->delete();
     }

@@ -2,42 +2,62 @@
 
 namespace App\Http\Controllers;
 
-use App\Contracts\Repositories\BasketsRepositoryContract;
+use App\Contracts\Services\BasketServiceContract;
 use App\Contracts\Services\FlashMessageContract;
 use App\Http\Requests\BasketRequest;
-use Illuminate\Contracts\View\View;
+use App\View\Components\Price;
 
 class BasketController extends Controller
 {
-    public function __construct(public readonly BasketsRepositoryContract $repository)
-    {
+    public function __construct(
+        public readonly BasketServiceContract $basketService,
+    ) {
     }
 
-    public function index(BasketRequest $request): View
+    public function index()
     {
-        $baskets = $this->repository->findAll($request->user()->id);
+        $baskets = $this->basketService->findUserBaskets(['car', 'car.image']);
+
+        if ($baskets->isEmpty()) {
+            return redirect()->route('account');
+        }
 
         return view('pages.basket', ['baskets' => $baskets]);
     }
 
     public function destroy(int $id, FlashMessageContract $flashMessage)
     {
-        $this->repository->delete($id);
+        $this->basketService->delete($id);
 
         $flashMessage->success('Товар удален из корзины');
 
         return back();
     }
 
-    public function store(BasketRequest $request, FlashMessageContract $flashMessage)
+    public function addOne(BasketRequest $request, FlashMessageContract $flashMessage)
     {
         $fields = $request->validated();
-        $fields['user_id'] = $request->user()->id;
         
-        $this->repository->create($fields);
+        $this->basketService->addOne($fields);
 
         $flashMessage->success('Товар добавлен в корзину');
 
         return back();
+    }
+
+    public function update(BasketRequest $request)
+    {
+        $fields = $request->validated();
+        
+        $basket = $this->basketService->getUserBasketsByCarId($fields['car_id']);
+
+        $this->basketService->update($basket, $fields);
+
+        return back();
+    }
+
+    public function getBasketCost()
+    {
+        return (new Price(auth()->user()->basketCost))->formattedPrice();
     }
 }

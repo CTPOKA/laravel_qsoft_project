@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('car_id')->references('id')->on('cars')->cascadeOnDelete();
             $table->unsignedInteger('count')->default(1);
             $table->timestamps();
+            $table->unique(['user_id', 'car_id']);
         });
     }
     

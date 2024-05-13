@@ -47,7 +47,7 @@
                     @endif
                     <p class="font-bold text-2xl text-orange"><x-price :price="$product->price" /></p>
                     <div class="mt-4 block">
-                        <form method="post" action="{{ route('basket.store') }}">
+                        <form method="post" action="{{ route('basket.add') }}">
                             @csrf
                             <button name="car_id" value="{{ $product->id }}" class="inline-block bg-orange hover:bg-opacity-70 focus:outline-none text-white font-bold py-2 px-4 rounded">
                                 <x-icons.basket class="inline-block h-6 w-6 mr-2" />

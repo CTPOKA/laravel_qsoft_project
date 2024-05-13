@@ -5,21 +5,27 @@ namespace App\Providers;
 use App\Contracts\Services\ArticleCreationServiceContract;
 use App\Contracts\Services\ArticleRemoveServiceContract;
 use App\Contracts\Services\ArticleUpdateServiceContract;
+use App\Contracts\Services\BasketServiceContract;
 use App\Contracts\Services\CarCreationServiceContract;
 use App\Contracts\Services\CarRemoveServiceContract;
 use App\Contracts\Services\CarUpdateServiceContract;
 use App\Contracts\Services\CatalogDataCollectorContract;
 use App\Contracts\Services\FlashMessageContract;
 use App\Contracts\Services\ImagesServiceContract;
+use App\Contracts\Services\OrdersServiceContract;
+use App\Contracts\Services\PayOrderClientServiceContract;
 use App\Contracts\Services\RolesServiceContract;
 use App\Contracts\Services\SalonsClientServiceContract;
 use App\Contracts\Services\StatisticsCommandServiceContract;
 use App\Contracts\Services\TagsSyncServiceContract;
 use App\Services\ArticlesService;
+use App\Services\BasketService;
 use App\Services\CarsService;
 use App\Services\CatalogDataCollector;
 use App\Services\FlashMessage;
 use App\Services\ImagesService;
+use App\Services\OrdersService;
+use App\Services\PayOrderClientService;
 use App\Services\RolesService;
 use App\Services\SalonsClientService;
 use App\Services\StatisticsCommandService;
@@ -61,6 +67,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(ArticleUpdateServiceContract::class, ArticlesService::class);
         $this->app->singleton(ArticleRemoveServiceContract::class, ArticlesService::class);
 
+        $this->app->singleton(BasketServiceContract::class, BasketService::class);
+
         $this->app->singleton(StatisticsCommandServiceContract::class, StatisticsCommandService::class);
         $this->app->singleton(RolesServiceContract::class, RolesService::class);
         $this->app->singleton(ImagesServiceContract::class, function () {
@@ -76,6 +84,16 @@ class AppServiceProvider extends ServiceProvider
                 'baseUrl' => config('services.salonApi.url'),
             ]);
         });
+
+        $this->app->singleton(PayOrderClientServiceContract::class, function () {
+            return $this->app->make(PayOrderClientService::class, [
+                'user' => config('auth.basic.user'),
+                'password' => config('auth.basic.password'),
+                'baseUrl' => config('services.payOrderApi.url'),
+            ]);
+        });
+
+        $this->app->singleton(OrdersServiceContract::class, OrdersService::class);
     }
 
     /**

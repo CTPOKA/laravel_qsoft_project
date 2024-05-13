@@ -2,31 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Contracts\Repositories\BasketsRepositoryContract;
-use App\Contracts\Repositories\OrdersRepositoryContract;
+use App\Contracts\Services\BasketServiceContract;
 use App\Contracts\Services\FlashMessageContract;
+use App\Contracts\Services\OrdersServiceContract;
 use App\Http\Requests\OrderRequest;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function __construct(public readonly OrdersRepositoryContract $repository)
+    public function __construct(public readonly OrdersServiceContract $ordersService)
     {
     }
 
-    public function index(OrderRequest $request)
+    public function index(Request $request)
     {
         $userId = $request->user()->id;
-        $orders = $this->repository->findAll($userId);
+        $orders = $this->ordersService->findUserOrders($userId);
 
         return view('pages.account', ['orders' => $orders]);
     }
 
-    public function store(OrderRequest $request, FlashMessageContract $flashMessage, BasketsRepositoryContract $basketRepository)
+    public function store(OrderRequest $request, FlashMessageContract $flashMessage, BasketServiceContract $basketService)
     {
         $fields = $request->validated();
-        $this->repository->create($fields);
+        $this->ordersService->create($fields);
 
-        $basketRepository->clear($fields['user_id']);
+        $basketService->clearUserBaskets($fields['user_id']);
 
         $flashMessage->success('Заказ добавлен');
         
